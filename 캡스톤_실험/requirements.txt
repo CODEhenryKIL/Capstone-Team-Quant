@@ -1,0 +1,12 @@
+pandas>=2.0
+numpy>=1.24
+requests>=2.31
+tqdm>=4.66
+lxml>=5.0
+html5lib>=1.1
+packaging>=23
+openpyxl>=3.1
+scipy>=1.13
+matplotlib>=3.9
+seaborn>=0.13
+pypdf>=6.0

@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US GAAP 회계적 왜곡 보정 투자 전략</title>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+/* Apple Design System Variables */
+:root {
+  --colors-primary: #0066cc;
+  --colors-primary-focus: #0071e3;
+  --colors-primary-on-dark: #2997ff;
+  --colors-canvas: #ffffff;
+  --colors-canvas-parchment: #f5f5f7;
+  --colors-surface-tile-1: #272729;
+  --colors-surface-black: #000000;
+  --colors-ink: #1d1d1f;
+  --colors-body-on-dark: #ffffff;
+  --colors-body-muted: #cccccc;
+  
+  --font-display: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif;
+  --font-text: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--colors-surface-black);
+  overflow: hidden; 
+  font-family: var(--font-text);
+  word-break: keep-all; /* Prevents awkward Korean word breaks */
+}
+
+/* Scaling Container for Fixed Aspect Ratio (16:9) */
+#presentation-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: center center;
+  background: var(--colors-surface-tile-1);
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 140px;
+  box-sizing: border-box;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Themes */
+.theme-dark {
+  background-color: var(--colors-surface-tile-1);
+  color: var(--colors-body-on-dark);
+}
+
+/* Typography */
+h1 {
+  font-family: var(--font-display);
+  font-size: 80px;
+  font-weight: 600;
+  letter-spacing: -1.8px;
+  line-height: 1.15;
+  margin-bottom: 40px;
+  text-align: center;
+  white-space: nowrap; /* Force explicit breaks */
+}
+h2 {
+  font-family: var(--font-display);
+  font-size: 64px;
+  font-weight: 600;
+  letter-spacing: -1.2px;
+  line-height: 1.15;
+  margin-bottom: 48px;
+  text-align: center;
+  white-space: nowrap; /* Force explicit breaks */
+}
+p {
+  font-family: var(--font-text);
+  font-size: 42px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.4px;
+  text-align: center;
+  margin: 0 auto 32px;
+  white-space: nowrap; /* Force explicit breaks */
+}
+.highlight {
+  color: var(--colors-primary-on-dark);
+  font-weight: 600;
+}
+
+.subtext {
+  font-size: 28px;
+  color: var(--colors-body-muted);
+  margin-top: 40px;
+  white-space: nowrap;
+}
+
+/* UI Elements */
+.pill-cta {
+  display: inline-block;
+  background-color: var(--colors-primary-on-dark);
+  color: #000;
+  padding: 16px 40px;
+  border-radius: 9999px;
+  font-size: 32px;
+  font-weight: 600;
+  margin-top: 40px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  white-space: nowrap;
+}
+
+/* Cards & Layouts */
+.card-grid {
+  display: flex;
+  gap: 40px;
+  justify-content: center;
+  width: 100%;
+  margin-top: 40px;
+}
+.card {
+  background: rgba(255,255,255,0.05);
+  padding: 40px 60px;
+  border-radius: 24px;
+  text-align: center;
+  flex: 1;
+  white-space: nowrap;
+}
+.card-title {
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--colors-body-on-dark);
+}
+.card-desc {
+  font-size: 28px;
+  color: var(--colors-body-muted);
+  line-height: 1.4;
+}
+
+/* Chart Canvas Container */
+.chart-container {
+  margin-top: 40px;
+  width: 1200px;
+  height: 480px;
+  position: relative;
+}
+
+/* Interactive Slider section */
+.interactive-panel {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 60px;
+  border-radius: 32px;
+  width: 1300px;
+  margin-top: 40px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.slider-container {
+  width: 100%;
+  margin: 40px 0;
+}
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--colors-primary-on-dark);
+  height: 12px;
+  border-radius: 6px;
+}
+.stats-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 40px;
+}
+.stat-box {
+  text-align: center;
+  flex: 1;
+  white-space: nowrap;
+}
+.stat-value {
+  font-size: 72px;
+  font-weight: 600;
+  font-family: var(--font-display);
+  letter-spacing: -1px;
+}
+
+/* Indicators */
+.page-indicator {
+  position: absolute;
+  bottom: 50px;
+  right: 60px;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 400;
+  z-index: 1000;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* Premium Slide Styles (1~5) */
+.premium-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 1400px;
+  height: 1400px;
+  background: radial-gradient(circle, rgba(0,114,255,0.12) 0%, rgba(0,0,0,0) 60%);
+  border-radius: 50%;
+  z-index: -1;
+}
+.premium-glow-purple {
+  background: radial-gradient(circle, rgba(167,112,239,0.12) 0%, rgba(0,0,0,0) 60%);
+}
+.text-gradient-blue {
+  background: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.text-gradient-purple {
+  background: linear-gradient(135deg, #A770EF, #CF8BF3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(30px);
+  border-radius: 32px;
+  padding: 60px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+}
+.hero-title {
+  font-size: 96px;
+  font-weight: 700;
+  letter-spacing: -2.5px;
+  line-height: 1.15;
+  margin-bottom: 30px;
+  text-align: center;
+}
+.hero-subtitle {
+  font-size: 32px;
+  font-weight: 500;
+  color: #aaa;
+  letter-spacing: 4px;
+  margin-bottom: 60px;
+}
+.label-pill {
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  color: #ccc;
+  margin-bottom: 40px;
+}
+.cinematic-text {
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -1.5px;
+  color: #fff;
+  text-align: center;
+}
+.cinematic-text .highlight-gradient {
+  background: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.comparison-container {
+  display: flex;
+  gap: 40px;
+  width: 1400px;
+  margin-top: 40px;
+}
+.comparison-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.icon-box {
+  width: 140px;
+  height: 140px;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+.icon-box-red {
+  background: linear-gradient(135deg, rgba(255,69,58,0.2), rgba(255,69,58,0.05));
+  border: 1px solid rgba(255,69,58,0.3);
+}
+.icon-box-green {
+  background: linear-gradient(135deg, rgba(50,215,75,0.2), rgba(50,215,75,0.05));
+  border: 1px solid rgba(50,215,75,0.3);
+}
+.bar-wrap {
+  width: 1000px;
+  margin: 40px auto;
+  text-align: left;
+}
+.bar-track {
+  width: 100%;
+  height: 24px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  margin-top: 15px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.bar-fill-old {
+  height: 100%;
+  width: 83%; 
+  background: #555;
+  border-radius: 12px;
+}
+.bar-fill-new {
+  height: 100%;
+  width: 90%; 
+  background: linear-gradient(90deg, #00C6FF, #0072FF);
+  border-radius: 12px;
+}
+</style>
+</head>
+<body>
+
+<div id="presentation-container">
+
+  <!-- 슬라이드 1 -->
+  <div class="slide theme-dark active" id="slide-1">
+    <div class="premium-glow"></div>
+    <div class="label-pill">CAPSTONE PROJECT 2026</div>
+    <h1 class="hero-title">
+      US GAAP 회계적 왜곡 보정을 통한<br>
+      <span class="text-gradient-blue">주식 포트폴리오 최적화 전략</span>
+    </h1>
+    <div class="hero-subtitle">데이터 기반 퀀트 방법론</div>
+  </div>
+
+  <!-- 슬라이드 2 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">CORE MESSAGE</div>
+    <div class="cinematic-text">
+      미국 회계기준(US GAAP)에서는<br>단순 비용으로 처리되어 장부에 잘 보이지 않는<br>
+      <span class="highlight-gradient" style="font-size: 80px; display: inline-block; margin-top: 20px;">R&D와 조직자본</span><br>
+      <span style="font-size: 42px; color: #aaa; font-weight: 400; margin-top: 30px; display: inline-block;">이를 다시 무형자산으로 복원하여 보정했을 때,</span>
+    </div>
+  </div>
+
+  <!-- 슬라이드 3 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="cinematic-text">
+      특히 <span class="text-gradient-purple" style="font-size: 80px; font-weight: 700;">바이오 및 IT 기업군</span>에서<br>
+      <span style="display: inline-block; margin-top: 30px;">시장이 충분히 반영하지 못한<br>강력한 <span class="highlight-gradient">상대가치 저평가 신호</span>가 발견되었습니다.</span>
+    </div>
+  </div>
+
+  <!-- 슬라이드 4 -->
+  <div class="slide theme-dark">
+    <div class="label-pill">MISCONCEPTION vs REALITY</div>
+    <h2 style="margin-bottom: 20px;">단순한 주가 맞추기(AI)가 아닙니다</h2>
+    
+    <div class="comparison-container">
+      <div class="glass-panel comparison-card">
+        <div class="icon-box icon-box-red">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#ff453a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </div>
+        <div style="font-size: 32px; font-weight: 600; color: #fff; margin-bottom: 20px; white-space: nowrap;">주가의 방향성 단순 예측</div>
+        <div style="font-size: 24px; color: #aaa; line-height: 1.6; white-space: nowrap;">"AI가 주가를 귀신같이 맞출 수 있다"</div>
+      </div>
+      
+      <div class="glass-panel comparison-card" style="border: 1px solid rgba(50,215,75,0.3); background: rgba(50,215,75,0.03);">
+        <div class="icon-box icon-box-green">
+          <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#32d74b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+        </div>
+        <div style="font-size: 32px; font-weight: 600; color: #fff; margin-bottom: 20px; white-space: nowrap;">회계 보정 기반 내재가치 발견</div>
+        <div style="font-size: 24px; color: #aaa; line-height: 1.6; white-space: nowrap;">"왜곡된 재무정보를 바로잡으면<br>시장이 놓친 투자 기회를 잡을 수 있다"</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 5 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">PARADIGM SHIFT</div>
+    <h2 style="margin-bottom: 40px;">가치 창출의 패러다임 변화</h2>
+    
+    <div style="display: flex; gap: 80px; width: 1400px; align-items: center;">
+      <!-- 과거 -->
+      <div class="glass-panel" style="flex: 1; text-align: center; padding: 60px;">
+        <div style="font-size: 32px; color: #aaa; margin-bottom: 40px;">과거 (1975년 S&P 500)</div>
+        <div style="position: relative; width: 280px; height: 280px; margin: 0 auto; border-radius: 50%; background: conic-gradient(#555 0% 83%, rgba(255,255,255,0.05) 83% 100%); display: flex; align-items: center; justify-content: center;">
+          <div style="width: 220px; height: 220px; border-radius: 50%; background: #121212; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <div style="font-size: 60px; font-weight: 700; color: #fff;">83%</div>
+            <div style="font-size: 20px; color: #888;">유형자산</div>
+          </div>
+        </div>
+        <div style="font-size: 24px; color: #aaa; margin-top: 40px; line-height: 1.5;">공장, 기계, 토지 등<br>장부에 기록되는 자산 중심</div>
+      </div>
+      
+      <div style="font-size: 60px; color: rgba(255,255,255,0.2);">➡️</div>
+      
+      <!-- 현재 -->
+      <div class="glass-panel" style="flex: 1; text-align: center; padding: 60px; border-color: rgba(0,198,255,0.3); background: rgba(0,198,255,0.03);">
+        <div class="text-gradient-blue" style="font-size: 32px; font-weight: 700; margin-bottom: 40px;">현재 (2020년 S&P 500)</div>
+        <div style="position: relative; width: 280px; height: 280px; margin: 0 auto; border-radius: 50%; background: conic-gradient(#00C6FF 0% 90%, rgba(255,255,255,0.05) 90% 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(0,198,255,0.2);">
+          <div style="width: 220px; height: 220px; border-radius: 50%; background: #121212; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+            <div class="text-gradient-blue" style="font-size: 72px; font-weight: 800;">90%</div>
+            <div style="font-size: 20px; color: #aaa;">무형자산</div>
+          </div>
+        </div>
+        <div style="font-size: 24px; color: #fff; margin-top: 40px; line-height: 1.5;">데이터, 소프트웨어, R&D 등<br><span style="color: #00C6FF; font-weight: 600;">비용 처리되는 자산 중심</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 6 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">INTANGIBLE ASSETS</div>
+    <h2 style="margin-bottom: 60px;">가치의 중심 이동</h2>
+    <div style="display: flex; gap: 40px; width: 1400px; justify-content: center;">
+      <div class="glass-panel" style="flex: 1; padding: 50px; text-align: center;">
+        <div style="font-size: 60px; margin-bottom: 20px;">🧬</div>
+        <div style="font-size: 36px; font-weight: 600; color: #fff; margin-bottom: 15px;">바이오 기업</div>
+        <div style="font-size: 24px; color: #aaa; line-height: 1.5; white-space: nowrap;">신약 후보물질<br>임상 데이터</div>
+      </div>
+      <div class="glass-panel" style="flex: 1; padding: 50px; text-align: center;">
+        <div style="font-size: 60px; margin-bottom: 20px;">💻</div>
+        <div style="font-size: 36px; font-weight: 600; color: #fff; margin-bottom: 15px;">IT 기업</div>
+        <div style="font-size: 24px; color: #aaa; line-height: 1.5; white-space: nowrap;">소프트웨어 & 플랫폼<br>엔지니어링 인력</div>
+      </div>
+      <div class="glass-panel" style="flex: 1; padding: 50px; text-align: center;">
+        <div style="font-size: 60px; margin-bottom: 20px;">⚙️</div>
+        <div style="font-size: 36px; font-weight: 600; color: #fff; margin-bottom: 15px;">반도체 기업</div>
+        <div style="font-size: 24px; color: #aaa; line-height: 1.5; white-space: nowrap;">설계 역량<br>지식재산권(IP) 축적</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 7 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="cinematic-text">
+      하지만 이 거대한 가치들은<br>
+      <span style="font-size: 80px; font-weight: 700; color: rgba(255,255,255,0.3); letter-spacing: 2px; display: inline-block; margin: 40px 0;">전통적인 재무제표에 잡히지 않습니다.</span><br>
+      <span style="font-size: 36px; color: #aaa; font-weight: 400; display: inline-block;">연구개발 및 소프트웨어 인력 비용은 자산이 아닌 <span style="color:#ff453a; font-weight:600;">'당기 비용'</span>으로 소멸됩니다.</span>
+    </div>
+  </div>
+
+  <!-- 슬라이드 8 -->
+  <div class="slide theme-dark">
+    <div class="label-pill">ACCOUNTING MISMATCH</div>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 80px; width: 1500px; margin-top: 40px;">
+      <div style="text-align: right; flex: 1;">
+        <div style="font-size: 32px; color: #aaa; margin-bottom: 20px;">경제적 실질</div>
+        <div class="text-gradient-blue" style="font-size: 72px; font-weight: 700; white-space: nowrap;">미래를 위한 투자</div>
+        <div style="font-size: 24px; color: #888; margin-top: 20px;">(Investment for Growth)</div>
+      </div>
+      <div style="font-size: 60px; color: #555; font-weight: 300;">VS</div>
+      <div style="text-align: left; flex: 1;">
+        <div style="font-size: 32px; color: #aaa; margin-bottom: 20px;">회계적 처리</div>
+        <div style="color: #ff453a; font-size: 72px; font-weight: 700; white-space: nowrap;">당기 소멸 비용</div>
+        <div style="font-size: 24px; color: #888; margin-top: 20px;">(Current Year Expense)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 9 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="glass-panel" style="width: 1200px; text-align: center; border-color: rgba(255,69,58,0.3);">
+      <div style="width: 80px; height: 80px; background: rgba(255,69,58,0.1); color: #ff453a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 30px; font-weight: 700;">!</div>
+      <h2 style="margin-bottom: 30px; color: #fff;">US GAAP의 극단적 보수성</h2>
+      <p style="font-size: 42px; line-height: 1.6; color: #ccc;">미국 회계기준(US GAAP)은 R&D 지출을<br><span style="color: #ff453a; font-weight: 600;">발생 즉시 전액 비용 처리</span>하는<br>엄격한 기준을 적용하고 있습니다.</p>
+      <div style="margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 24px; color: #888;">
+        (참고: IFRS는 요건 충족 시 개발비 자산화를 일부 허용)
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 10 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="cinematic-text">
+      이러한 회계적 보수성은 결국,<br>
+      <div style="margin: 50px 0; display: flex; justify-content: center; gap: 60px;">
+        <span class="glass-panel" style="padding: 30px 60px; font-size: 80px; font-weight: 700; color: #ff3b30; letter-spacing: 2px;">PER</span>
+        <span class="glass-panel" style="padding: 30px 60px; font-size: 80px; font-weight: 700; color: #ff3b30; letter-spacing: 2px;">PBR</span>
+      </div>
+      <span style="font-size: 48px; color: #aaa; font-weight: 400;">핵심 가치평가 지표의 <span class="text-gradient-purple" style="font-weight: 700;">구조적 왜곡</span>을 낳습니다.</span>
+    </div>
+  </div>
+
+  <!-- 슬라이드 11 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">INTERACTIVE SIMULATION</div>
+    <h2>회계기준별 PER 왜곡 시뮬레이션</h2>
+    <p style="font-size: 32px; color: #aaa;">동일한 경제적 실질(이익 창출력)에도 불구하고 회계기준에 따라 PER이 극단적으로 달라집니다.</p>
+    
+    <div class="interactive-panel" style="width: 1500px; padding: 40px 60px;">
+      <div style="font-size: 28px; font-weight: 600; margin-bottom: 20px; text-align: center; white-space: nowrap;">당기 R&D 지출 규모 조절 (시가총액 $20,000억 / R&D 차감 전 이익 $1,000억 고정)</div>
+      <div class="slider-container" style="padding: 0 40px;">
+        <input type="range" id="rnd-slider" min="0" max="900" step="100" value="0">
+        <div style="text-align: center; margin-top: 15px; font-size: 32px; color: #fff; font-weight: 600;">당기 R&D 지출액: <span id="val-rnd-display" style="color: var(--colors-primary-on-dark);">$0억</span></div>
+      </div>
+      
+      <div style="display: flex; gap: 40px; margin-top: 40px;">
+        <!-- US GAAP -->
+        <div style="flex: 1; background: rgba(255,255,255,0.05); border-radius: 20px; padding: 40px;">
+          <h3 style="margin-top: 0; margin-bottom: 10px; color: #ff453a; text-align: center; font-size: 36px; white-space: nowrap;">US GAAP (전액 비용)</h3>
+          <div class="stats-row" style="margin-top: 30px;">
+            <div class="stat-box">
+              <div style="font-size: 24px; color: #aaa; white-space: nowrap;">보고된 당기순이익</div>
+              <div class="stat-value" id="gaap-netincome" style="font-size: 56px;">$1,000억</div>
+            </div>
+            <div class="stat-box">
+              <div style="font-size: 24px; color: #aaa; white-space: nowrap;">장부상 PER</div>
+              <div class="stat-value" id="gaap-per" style="color: #ff3b30; font-size: 56px;">20.0x</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- IFRS -->
+        <div style="flex: 1; background: rgba(255,255,255,0.05); border-radius: 20px; padding: 40px;">
+          <h3 style="margin-top: 0; margin-bottom: 10px; color: #32d74b; text-align: center; font-size: 36px; white-space: nowrap;">IFRS (자산화 가정)</h3>
+          <div class="stats-row" style="margin-top: 30px;">
+            <div class="stat-box">
+              <div style="font-size: 24px; color: #aaa; white-space: nowrap;">보고된 당기순이익</div>
+              <div class="stat-value" id="ifrs-netincome" style="font-size: 56px;">$1,000억</div>
+            </div>
+            <div class="stat-box">
+              <div style="font-size: 24px; color: #aaa; white-space: nowrap;">장부상 PER</div>
+              <div class="stat-value" id="ifrs-per" style="color: #32d74b; font-size: 56px;">20.0x</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 12 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">PBR DISTORTION</div>
+    <div class="cinematic-text" style="margin-top: 40px;">
+      R&D 투자가 자산으로 인정받지 못하면,<br>
+      <span style="font-size: 80px; font-weight: 700; color: #ff453a; display: inline-block; margin: 30px 0;">장부상 자기자본(Book Equity)이 증발합니다.</span><br>
+      <span style="font-size: 42px; color: #aaa; font-weight: 400;">이는 곧, 기업이 실제 내재가치보다 훨씬 <span class="text-gradient-purple" style="font-weight: 700;">비싸게 거래되는 것(고평가)처럼 보이는 착시</span>를 유발합니다.</span>
+    </div>
+  </div>
+
+  <!-- 슬라이드 13 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="glass-panel" style="width: 1500px; padding: 80px 100px; position: relative;">
+      <div style="position: absolute; top: 40px; left: 40px; font-size: 120px; color: rgba(255,255,255,0.05); font-family: Georgia, serif; line-height: 1;">"</div>
+      <div style="font-size: 56px; font-weight: 600; line-height: 1.6; color: #fff; text-align: left; margin: 0; position: relative; z-index: 1; white-space: nowrap;">
+        어떤 기업은 실제로는 <span class="text-gradient-blue">미래 성장동력</span>을 강력하게 쌓고 있는데,<br>
+        전통 지표만 보면 그저 <span style="color: #ff453a;">"이익이 낮다", "너무 비싸다", "고평가되어 있다"</span>고<br>착각하게 만듭니다.
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 14 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill" style="color: #fff; background: rgba(167,112,239,0.2); border-color: rgba(167,112,239,0.5);">THE CORE QUESTION</div>
+    <div class="cinematic-text" style="margin-top: 40px;">
+      "무형자산 투자를 많이 하는 기업이<br>회계상 불리하게 평가받는 구조적 한계가 있다면,<br>
+      <span style="font-size: 72px; font-weight: 700; display: inline-block; margin-top: 40px;">이를 모델로 보정했을 때<br>시장이 놓친 <span class="text-gradient-purple">숨겨진 저평가 신호(Alpha)</span>를<br>찾아낼 수 있는가?"</span>
+    </div>
+  </div>
+
+  <!-- 슬라이드 15 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">RESEARCH QUESTION 01</div>
+    <div class="glass-panel" style="width: 1500px; padding: 80px; text-align: center; margin-top: 40px;">
+      <div style="font-size: 80px; font-weight: 800; color: rgba(255,255,255,0.1); margin-bottom: 20px;">01</div>
+      <div style="font-size: 52px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        R&D와 SG&A의 일부를 단순 비용이 아닌 <span class="text-gradient-blue">무형투자(자산)</span>로 재분류하면,<br>
+        자본시장에서 기업의 <span style="color: #fff; border-bottom: 4px solid #0072FF; padding-bottom: 4px;">상대적 가치평가</span>를 기존보다 훨씬 더 잘 설명할 수 있는가?
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 16 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">RESEARCH QUESTION 02</div>
+    <div class="glass-panel" style="width: 1500px; padding: 80px; text-align: center; margin-top: 40px; border-color: rgba(167,112,239,0.3);">
+      <div style="font-size: 80px; font-weight: 800; color: rgba(167,112,239,0.1); margin-bottom: 20px;">02</div>
+      <div style="font-size: 52px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        그렇게 만든 새로운 회계 보정 팩터들이<br>
+        실제로 S&P500 기업 간의 <span class="text-gradient-purple" style="border-bottom: 4px solid #A770EF; padding-bottom: 4px;">섹터 중립 PBR 괴리(Gap)</span>를<br>정확하게 예측할 수 있는가?
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 17 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">RESEARCH QUESTION 03</div>
+    <div class="glass-panel" style="width: 1500px; padding: 80px; text-align: center; margin-top: 40px;">
+      <div style="font-size: 80px; font-weight: 800; color: rgba(255,255,255,0.1); margin-bottom: 20px;">03</div>
+      <div style="font-size: 52px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        모델이 "저평가"로 판단한 종목들만 모아<br>실제 포트폴리오를 구성했을 때,<br>
+        <span class="text-gradient-blue" style="border-bottom: 4px solid #0072FF; padding-bottom: 4px;">Fama-French 5요인으로 조정한 뒤에도<br>진짜 초과수익률(Alpha)이 남는가?</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 18 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill" style="color: #fff; background: rgba(167,112,239,0.2); border-color: rgba(167,112,239,0.5);">KEY HYPOTHESIS</div>
+    <div class="cinematic-text" style="margin-top: 40px;">
+      무형자산 회계 왜곡은<br>모든 산업에서 똑같이 나타나지 않습니다.<br>
+      <span style="font-size: 64px; font-weight: 700; display: inline-block; margin-top: 40px; color: #fff;">
+        <span class="text-gradient-purple">바이오(Bio)와 IT</span>처럼<br>무형자산 집약도가 극단적으로 높은 산업에서<br>이 전략은 <span style="border-bottom: 2px solid #fff;">가장 강력하게</span> 작동할 것이다.
+      </span>
+    </div>
+  </div>
+
+  <!-- 슬라이드 19 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">LITERATURE 01: ASSET PRICING</div>
+    <h2 style="margin-bottom: 60px;">Fama-French 5요인 모델</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: center;">
+      <div style="font-size: 42px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        단순히 수익률이 높다고 훌륭한 전략이 아닙니다.<br>
+        <span style="color: #aaa; font-weight: 400;">시장, 규모, 가치 등 공통 위험요인으로 이미 설명되는 수익률은<br>우리가 찾는 <span class="text-gradient-blue" style="font-weight: 700;">진짜 초과수익(Alpha)</span>이라고 볼 수 없습니다.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 20 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">LITERATURE 02: INTANGIBLE ACCOUNTING</div>
+    <h2 style="margin-bottom: 60px;">Peters and Taylor (2017)</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: center; border-color: rgba(167,112,239,0.3);">
+      <div style="font-size: 42px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        장부의 숫자를 그대로 믿지 마라.<br>
+        <span style="color: #aaa; font-weight: 400;">재무제표상 <span style="color:#fff;">R&D 지출의 100%</span>와 <span style="color:#fff;">판매관리비(SG&A)의 30%</span>를<br>소멸성 비용이 아닌 <span class="text-gradient-purple" style="font-weight: 700;">'미래를 위한 조직자본 투자'</span>로 재해석했습니다.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 21 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">LITERATURE 03: MACHINE LEARNING</div>
+    <h2 style="margin-bottom: 60px;">Learning-to-rank (RankNet)</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: center; border-color: rgba(0,198,255,0.3);">
+      <div style="font-size: 42px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        주식 투자에서 모든 기업의 정확한 절대 가격(PBR)을 맞히는 것보다,<br>
+        <span style="color: #aaa; font-weight: 400;">어떤 종목을 먼저 사야 할지 <span class="text-gradient-blue" style="font-weight: 700;">'종목 간의 서열(순위)'</span>을 매기는 것이 훨씬 중요합니다.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 22 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">RESEARCH ARCHITECTURE</div>
+    <h2>하나의 파이프라인으로 통합</h2>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 60px;">
+      
+      <div class="glass-panel" style="padding: 40px; text-align: center; width: 280px; height: 160px; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: 28px; font-weight: 700; color: #fff; white-space: nowrap;">1. 무형자본 보정</span>
+      </div>
+      
+      <div style="font-size: 40px; color: #555;">➔</div>
+      
+      <div class="glass-panel" style="padding: 40px; text-align: center; width: 280px; height: 160px; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: 28px; font-weight: 700; color: #fff; white-space: nowrap;">2. 섹터 중립<br>PBR 예측</span>
+      </div>
+      
+      <div style="font-size: 40px; color: #555;">➔</div>
+      
+      <div class="glass-panel" style="padding: 40px; text-align: center; width: 280px; height: 160px; display: flex; align-items: center; justify-content: center;">
+        <span style="font-size: 28px; font-weight: 700; color: #fff; white-space: nowrap;">3. Gap 기반<br>종목 선택</span>
+      </div>
+      
+      <div style="font-size: 40px; color: #A770EF;">➔</div>
+      
+      <div class="glass-panel" style="padding: 40px; text-align: center; width: 280px; height: 160px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(167,112,239,0.2), rgba(167,112,239,0.05)); border: 1px solid rgba(167,112,239,0.5);">
+        <span class="text-gradient-purple" style="font-size: 32px; font-weight: 800; white-space: nowrap;">4. FF5 알파<br>검정</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 슬라이드 23 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">PROCESS 01</div>
+    <h2 style="margin-bottom: 60px;">데이터 수집 및 전처리 파이프라인</h2>
+    <div style="display: flex; align-items: stretch; justify-content: space-between; width: 1550px; gap: 20px;">
+      <div class="glass-panel" style="text-align: center; flex: 1; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 280px;">
+        <div style="font-size: 60px; margin-bottom: 20px;">📊</div>
+        <div style="font-size: 28px; font-weight: 700; color: #fff; white-space: nowrap;">Yahoo Finance / SEC</div>
+        <div style="font-size: 18px; color: #aaa; margin-top: 15px;">주가 및 SEC 재무 데이터</div>
+      </div>
+      <div style="font-size: 40px; color: rgba(255,255,255,0.2); align-self: center;">➡️</div>
+      <div class="glass-panel" style="text-align: center; flex: 1; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 280px;">
+        <div style="font-size: 60px; margin-bottom: 20px;">🧹</div>
+        <div style="font-size: 28px; font-weight: 700; color: #fff; white-space: nowrap;">노이즈 필터링</div>
+        <div style="font-size: 18px; color: #aaa; margin-top: 15px;">이상치 및 생존 편향 제거</div>
+      </div>
+      <div style="font-size: 40px; color: rgba(255,255,255,0.2); align-self: center;">➡️</div>
+      <div class="glass-panel" style="text-align: center; flex: 1; padding: 40px 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 280px;">
+        <div style="font-size: 60px; margin-bottom: 20px;">🔄</div>
+        <div style="font-size: 28px; font-weight: 700; color: #fff; white-space: nowrap;">회계 재작성</div>
+        <div style="font-size: 18px; color: #aaa; margin-top: 15px;">무형투자 자산화 보정</div>
+      </div>
+      <div style="font-size: 40px; color: rgba(255,255,255,0.2); align-self: center;">➡️</div>
+      <div class="glass-panel" style="text-align: center; flex: 1; padding: 40px 20px; border-color: rgba(0,198,255,0.4); background: rgba(0,198,255,0.05); display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 280px;">
+        <div style="font-size: 60px; margin-bottom: 20px;">🧠</div>
+        <div class="text-gradient-blue" style="font-size: 28px; font-weight: 700; white-space: nowrap;">최종 학습 셋업</div>
+        <div style="font-size: 18px; color: #aaa; margin-top: 15px;">섹터 중립 PBR 매핑</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 24 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">PROCESS 02</div>
+    <h2 style="margin-bottom: 60px;">회계 재작성 (Accounting Recast)</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: center;">
+      <p style="font-size: 48px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        R&D와 SG&A 일부를 단순 비용이 아닌 무형투자로 자산화하여<br>
+        <span class="text-gradient-purple" style="font-size: 56px; font-weight: 700;">'보정 자기자본'과 '보정 영업이익' 계산</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- 슬라이드 25 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">PROCESS 03</div>
+    <h2 style="margin-bottom: 60px;">모델 학습 (Model Training)</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: center;">
+      <p style="font-size: 48px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        세 개의 회계 보정 팩터를 입력하여<br>
+        <span class="text-gradient-blue" style="font-size: 56px; font-weight: 700;">섹터 중립 상대 PBR(Target) 예측</span><br>
+        <span style="font-size: 32px; color: #aaa; margin-top: 20px; display: inline-block;">(MSE 기반 선형회귀 및 RankNet 알고리즘 비교 학습)</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- 슬라이드 26 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">PROCESS 04</div>
+    <h2 style="margin-bottom: 60px;">포트폴리오 검증 (Backtesting)</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: center;">
+      <p style="font-size: 48px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        예측값과 실제 관측값 사이의 <span class="text-gradient-purple" style="font-size: 56px; font-weight: 700;">Gap이 큰 저평가 기업</span>을 모아<br>
+        <span style="color: #ccc;">연간 리밸런싱 백테스트 및 FF5 알파(Alpha) 검정 수행</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- 슬라이드 27 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">DATA & UNIVERSE</div>
+    <h2 style="margin-bottom: 60px;">데이터 구성 및 유니버스</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: center; border-color: rgba(0,198,255,0.3);">
+      <div style="font-size: 42px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        <span style="color: #aaa;">2011년 ~ 2025년 사이 S&P500에 한 번이라도 편입된 대형주 대상</span><br>
+        단순히 현재 S&P500 구성 종목만 사용하지 않고, 과거 변경 이력을 복원하여<br>
+        <span class="text-gradient-blue" style="font-size: 52px; font-weight: 700;">생존 편향(Survivorship Bias)을 통제했습니다.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 28 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">ROBUSTNESS CHECK</div>
+    <h2 style="margin-bottom: 60px;">시점 정합성 (Look-ahead Bias 방지)</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: center;">
+      <div style="font-size: 42px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        미래 정보를 과거에 미리 알고 투자하는 백테스트 오류 방지<br>
+        <span style="font-family: monospace; font-size: 36px; color: #ff453a; background: rgba(255,69,58,0.1); padding: 15px 30px; border-radius: 12px; display: inline-block; margin-bottom: 30px;">
+          ValuationDate = max(결산 후 3개월 월말, 실제 공시일 월말)
+        </span><br>
+        <span style="color: #aaa; font-weight: 400; font-size: 32px;">재무정보가 시장에 공식적으로 공개되고, <span style="color:#fff;">투자자가 실제로 확인 가능한 시점</span> 이후의 가격만 사용</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 29 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">CORE LOGIC</div>
+    <h2 style="margin-bottom: 60px;">회계 보정 로직 (무형자산 자산화)</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: center;">
+      <p style="font-size: 42px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        <span class="text-gradient-blue" style="font-size: 64px; font-weight: 700; font-family: monospace; display: inline-block; margin-bottom: 40px;">
+          Investment = R&D + 0.3 × SG&A
+        </span><br>
+        <span style="color: #aaa; font-size: 36px;">매년 33%의 상각률을 적용하여 영구재고법으로 기업의 <span style="color:#fff; font-weight:600;">진짜 무형자본</span>을 누적 계산</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- 슬라이드 30 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">INPUT FEATURES</div>
+    <h2 style="margin-bottom: 40px;">3가지 핵심 회계 팩터</h2>
+    <div style="display: flex; flex-direction: column; gap: 20px; width: 1400px;">
+      
+      <div class="glass-panel" style="padding: 30px 50px; text-align: left; display: flex; align-items: center; justify-content: space-between;">
+        <div style="flex: 1; white-space: nowrap;">
+          <span style="font-size: 32px; font-weight: 700; color: #fff;">1. 수익성 팩터 (m₁)</span>
+          <div style="font-size: 24px; color: #aaa; margin-top: 10px;">보정 자기자본 대비 순이익</div>
+        </div>
+        <div style="font-size: 28px; color: var(--colors-primary-on-dark); background: rgba(0,198,255,0.1); padding: 15px 30px; border-radius: 12px; white-space: nowrap; font-weight: 600;">m₁ = 당기순이익 / 보정 자기자본</div>
+      </div>
+      
+      <div class="glass-panel" style="padding: 30px 50px; text-align: left; display: flex; align-items: center; justify-content: space-between;">
+        <div style="flex: 1; white-space: nowrap;">
+          <span style="font-size: 32px; font-weight: 700; color: #fff;">2. 이익 왜곡 팩터 (m₂)</span>
+          <div style="font-size: 24px; color: #aaa; margin-top: 10px;">기존 대비 보정 영업이익 차이</div>
+        </div>
+        <div style="font-size: 28px; color: var(--colors-primary-on-dark); background: rgba(0,198,255,0.1); padding: 15px 30px; border-radius: 12px; white-space: nowrap; font-weight: 600;">m₂ = (보정 영업이익 - 기존 영업이익) / 기존 영업이익</div>
+      </div>
+      
+      <div class="glass-panel" style="padding: 30px 50px; text-align: left; display: flex; align-items: center; justify-content: space-between;">
+        <div style="flex: 1; white-space: nowrap;">
+          <span style="font-size: 32px; font-weight: 700; color: #fff;">3. 투자 가속도 팩터 (m₃)</span>
+          <div style="font-size: 24px; color: #aaa; margin-top: 10px;">무형투자 증가 속도</div>
+        </div>
+        <div style="font-size: 28px; color: var(--colors-primary-on-dark); background: rgba(0,198,255,0.1); padding: 15px 30px; border-radius: 12px; white-space: nowrap; font-weight: 600;">m₃ = 당기 무형투자 / 과거 2년 평균 무형투자</div>
+      </div>
+      
+    </div>
+  </div>
+
+  <!-- 슬라이드 31 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">TARGET VARIABLE</div>
+    <h2 style="margin-bottom: 60px;">타겟과 Gap의 의미</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: center;">
+      <p style="font-size: 42px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        타겟(y) : <span class="text-gradient-blue" style="font-size: 48px; font-weight: 700;">섹터 중립 상대 PBR</span><br>
+        <span style="font-size: 32px; color: #888;">(개별 종목 PBR - 섹터 중앙값 PBR)</span>
+      </p>
+      <div style="margin-top: 40px; font-weight: 700; font-family: monospace; font-size: 56px; color: var(--colors-primary-on-dark); background: rgba(0,198,255,0.1); padding: 40px; border-radius: 20px; display: inline-block; white-space: nowrap; line-height: 1.6; border: 1px solid rgba(0,198,255,0.3);">
+        GAP = 예측된 상대 PBR - 실제 관측된 상대 PBR<br>
+        <span style="font-size: 36px; color: #aaa; margin-top: 15px; display: block; font-weight: 500;">= 예측된 상대 PBR - (실제 관측 PBR - 섹터 중앙값 PBR)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 32 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">UNDERVALUATION SIGNAL</div>
+    <h2 style="margin-bottom: 60px;">상대적 저평가 후보 (Gap)</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 80px 100px; position: relative; border-color: rgba(167,112,239,0.3);">
+      <div style="font-size: 48px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap; text-align: left;">
+        <span style="color: #A770EF; font-size: 64px; font-weight: 800;">Gap이 크다</span>는 것은<br>
+        모델 기준으로는 훨씬 높은 가치(PBR)를 인정받아야 하는데,<br>
+        시장에서 부당하게 낮게 평가되고 있다는 뜻입니다.<br>
+        <span class="text-gradient-purple" style="font-size: 56px; font-weight: 700; border-bottom: 4px solid #A770EF; padding-bottom: 5px;">= 회계 보정 기준의 강력한 '매수(Long) 후보'</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 33 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">MACHINE LEARNING MODELS</div>
+    <h2 style="margin-bottom: 20px;">모델 1: MSE (선형 회귀)</h2>
+    <p style="font-size: 32px; color: #aaa; margin-bottom: 60px;">복잡한 딥러닝이 아닌, 3가지 팩터에 가중치를 곱해 총점을 내는 단순 선형 구조</p>
+    
+    <div style="display: flex; gap: 40px; width: 1400px; justify-content: center; align-items: stretch;">
+      <!-- 선형 스코어링 -->
+      <div class="glass-panel" style="flex: 1; padding: 50px 40px; text-align: center; border-color: rgba(255,255,255,0.2);">
+        <div style="font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 30px;">단순 선형 채점 방식</div>
+        <div style="font-size: 24px; color: #aaa; margin-bottom: 20px;">학생 평가 비유</div>
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
+          <div style="padding: 15px; background: rgba(0,198,255,0.1); border-radius: 10px; color: #fff; font-size: 22px;">출석 (m₁) × 가중치</div>
+          <div style="padding: 15px; background: rgba(0,198,255,0.1); border-radius: 10px; color: #fff; font-size: 22px;">과제 (m₂) × 가중치</div>
+          <div style="padding: 15px; background: rgba(0,198,255,0.1); border-radius: 10px; color: #fff; font-size: 22px;">시험 (m₃) × 가중치</div>
+        </div>
+        <div style="font-size: 36px; color: rgba(255,255,255,0.2); margin-bottom: 20px;">⬇️</div>
+        <div class="text-gradient-blue" style="font-size: 36px; font-weight: 800;">기업의 총점 (Score)</div>
+      </div>
+
+      <!-- MSE 손실함수 -->
+      <div class="glass-panel" style="flex: 1.2; padding: 40px 40px; text-align: center; border-color: rgba(0,198,255,0.5); background: rgba(0,198,255,0.05); position: relative;">
+        <div style="font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 20px;">MSE의 채점 기준: <span style="color:#00C6FF;">절대 수치 맞추기</span></div>
+        
+        <!-- Interactive Canvas for MSE -->
+        <div style="position: relative; width: 100%; height: 220px; background: rgba(0,0,0,0.3); border-radius: 15px; border: 1px solid rgba(0,198,255,0.2); margin-bottom: 20px; overflow: hidden;">
+          <canvas id="mseCanvas" width="450" height="220"></canvas>
+          <div style="position: absolute; top: 15px; right: 20px; font-size: 24px; font-weight: 800; color: #fff; background: rgba(255,69,58,0.2); padding: 5px 15px; border-radius: 10px; border: 1px solid rgba(255,69,58,0.5);" id="mseValueDisplay">
+            MSE: 0.00
+          </div>
+        </div>
+        
+        <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px;">
+          <div style="font-size: 20px; font-weight: 600; color: #aaa;">막대 기울기 조절:</div>
+          <input type="range" id="slopeSlider" min="-1" max="1" step="0.01" value="-0.25" style="width: 250px; cursor: pointer;">
+        </div>
+        
+        <div style="font-size: 22px; color: #aaa; line-height: 1.6;">
+          기울기를 움직여 <span style="color: #ff453a; font-weight: 700;">오차(잔차)의 제곱합(MSE)</span>이 최소가 되는<br>최적의 모델(선)을 찾는 과정입니다.
+        </div>
+        
+        <!-- 극단값 버튼 (우측 최하단) -->
+        <button id="mseOutlierBtn" style="position: absolute; bottom: 20px; right: 20px; padding: 8px 15px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600;">극단값 ON 🔴</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 34 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">MACHINE LEARNING MODELS</div>
+    <h2 style="margin-bottom: 20px;">모델 2: RankNet (순위 학습)</h2>
+    <p style="font-size: 32px; color: #aaa; margin-bottom: 60px;">실제 투자에서 가장 중요한 것은 점수가 아닌 "어떤 종목을 살 것인가(등수)"</p>
+    
+    <div style="display: flex; gap: 40px; width: 1400px; justify-content: center; align-items: stretch;">
+      <!-- 선형 스코어링 (동일) -->
+      <div class="glass-panel" style="flex: 1; padding: 50px 40px; text-align: center; border-color: rgba(255,255,255,0.2); opacity: 0.7;">
+        <div style="font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 30px;">단순 선형 채점 방식</div>
+        <div style="font-size: 24px; color: #aaa; margin-bottom: 20px;">(MSE와 동일한 모델 구조)</div>
+        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 30px;">
+          <div style="padding: 15px; background: rgba(167,112,239,0.1); border-radius: 10px; color: #fff; font-size: 22px;">출석 (m₁) × 가중치</div>
+          <div style="padding: 15px; background: rgba(167,112,239,0.1); border-radius: 10px; color: #fff; font-size: 22px;">과제 (m₂) × 가중치</div>
+          <div style="padding: 15px; background: rgba(167,112,239,0.1); border-radius: 10px; color: #fff; font-size: 22px;">시험 (m₃) × 가중치</div>
+        </div>
+        <div style="font-size: 36px; color: rgba(255,255,255,0.2); margin-bottom: 20px;">⬇️</div>
+        <div class="text-gradient-purple" style="font-size: 36px; font-weight: 800;">기업의 총점 (Score)</div>
+      </div>
+
+      <!-- RankNet 손실함수 -->
+      <div class="glass-panel" style="flex: 1.2; padding: 50px 40px; text-align: center; border-color: rgba(167,112,239,0.5); background: rgba(167,112,239,0.05); box-shadow: 0 0 30px rgba(167,112,239,0.2); position: relative;">
+        <div style="font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 30px;">RankNet의 채점 기준: <span style="color:#A770EF;">상대적 서열 맞추기</span></div>
+        <div style="display: flex; justify-content: center; align-items: flex-end; gap: 20px; height: 160px; margin-bottom: 20px; position: relative;">
+          <!-- 2등 -->
+          <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+            <div style="font-size: 24px; color: #aaa; margin-bottom: 10px;">기업 B</div>
+            <div style="width: 80px; height: 60px; background: rgba(255,255,255,0.1); border-radius: 10px 10px 0 0;"></div>
+          </div>
+          <!-- 1등 -->
+          <div style="display: flex; flex-direction: column; align-items: center; z-index: 2;">
+            <div style="font-size: 24px; font-weight: 700; color: #A770EF; margin-bottom: 10px;">기업 A</div>
+            <div style="width: 80px; height: 100px; background: rgba(167,112,239,0.4); border-radius: 10px 10px 0 0;"></div>
+          </div>
+          <!-- 극단값 (Hidden by default) -->
+          <div id="ranknetOutlier" style="display: flex; flex-direction: column; align-items: center; position: absolute; right: 40px; bottom: 0; opacity: 0; transition: all 0.5s ease; z-index: 1;">
+            <div style="font-size: 20px; font-weight: 700; color: #ff453a; margin-bottom: 10px; white-space: nowrap;">극단값 C (초고평가)</div>
+            <div style="width: 60px; height: 250px; background: rgba(255,69,58,0.5); border-radius: 10px 10px 0 0; border: 2px dashed #ff453a;"></div>
+          </div>
+        </div>
+        <div id="ranknetTextNormal" style="font-size: 28px; color: #fff; font-weight: 600; margin-bottom: 30px; line-height: 1.6; transition: opacity 0.3s;">
+          "정확히 몇 점인지는 안 중요해.<br>
+          <span style="color: #A770EF;">A가 B보다 순위가 높은 게 맞아?</span>"
+        </div>
+        <div id="ranknetTextOutlier" style="font-size: 24px; color: #ff453a; font-weight: 600; margin-bottom: 30px; line-height: 1.6; display: none; background: rgba(255,69,58,0.1); padding: 10px; border-radius: 10px;">
+          "극단값 C가 생겨도 A와 B의 서열은 불변!"<br>
+          <span style="color: #fff; font-size: 20px;">MSE처럼 선이 뒤틀리지 않는 강건함(Robustness) 확보</span>
+        </div>
+        <div style="font-size: 22px; color: #aaa; line-height: 1.6;">
+          절대적인 수치를 맞추는 대신,<br>
+          종목 간 상대적 저평가 순위(서열)를 학습하여 예측합니다.
+        </div>
+        
+        <!-- 극단값 버튼 (우측 최하단) -->
+        <button id="ranknetOutlierBtn" style="position: absolute; bottom: 20px; right: 20px; padding: 8px 15px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.3); color: #fff; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600;">극단값 ON 🔴</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 35 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">EVALUATION METRICS</div>
+    <h2 style="margin-bottom: 60px;">백테스트 설계 원칙</h2>
+    <div style="display: flex; gap: 30px; width: 1400px; justify-content: center;">
+      <div class="glass-panel" style="flex: 1; padding: 50px; text-align: left;">
+        <div style="font-size: 40px; margin-bottom: 20px;">⏱️</div>
+        <div style="font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 15px;">Rolling-window</div>
+        <div style="font-size: 22px; color: #aaa; line-height: 1.6; white-space: nowrap;">특정 연도 예측 시<br>미래 정보를 일절 사용하지 않는<br>엄격한 롤링 윈도우 검증</div>
+      </div>
+      <div class="glass-panel" style="flex: 1; padding: 50px; text-align: left; border-color: rgba(0,198,255,0.3);">
+        <div style="font-size: 40px; margin-bottom: 20px;">📈</div>
+        <div style="font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 15px;">Long-only 매수</div>
+        <div style="font-size: 22px; color: #aaa; line-height: 1.6; white-space: nowrap;">매년 모델이 예측한<br><span style="color:#00C6FF; font-weight:600;">Gap 상위 10% 종목</span>을<br>매수하여 1년 뒤 리밸런싱</div>
+      </div>
+      <div class="glass-panel" style="flex: 1; padding: 50px; text-align: left;">
+        <div style="font-size: 40px; margin-bottom: 20px;">🛡️</div>
+        <div style="font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 15px;">노이즈 필터링</div>
+        <div style="font-size: 22px; color: #aaa; line-height: 1.6; white-space: nowrap;">5달러 이하 초저가주 제외,<br>상장폐지 종목 수익률 -100% 처리 등<br>현실적 슬리피지 통제</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 36 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">PORTFOLIO STRATEGY</div>
+    <h2 style="margin-bottom: 60px;">핵심 비교 기준: Top 10% 전략</h2>
+    
+    <div style="display: flex; gap: 30px; width: 1500px; justify-content: center; align-items: stretch;">
+      <!-- Top 5% -->
+      <div class="glass-panel" style="flex: 1; padding: 50px 40px; text-align: center; opacity: 0.6;">
+        <div style="font-size: 48px; font-weight: 800; color: #fff; margin-bottom: 20px;">Top 5%</div>
+        <div style="font-size: 24px; font-weight: 600; color: #ff453a; margin-bottom: 30px;">강력한 신호, 부족한 분산</div>
+        <div style="font-size: 22px; color: #aaa; line-height: 1.6;">알파 신호는 가장 강하지만,<br>포트폴리오 종목 수가 너무 적어<br>개별 기업 리스크에 취약합니다.</div>
+      </div>
+      
+      <!-- Top 10% -->
+      <div class="glass-panel" style="flex: 1.2; padding: 60px 40px; text-align: center; border-color: rgba(167,112,239,0.5); background: rgba(167,112,239,0.1); transform: scale(1.05); box-shadow: 0 0 40px rgba(167,112,239,0.2); position: relative;">
+        <div style="position: absolute; top: -20px; left: 50%; transform: translateX(-50%); background: #A770EF; color: #fff; padding: 8px 20px; border-radius: 20px; font-size: 20px; font-weight: 700; white-space: nowrap;">최적의 균형 (Core Strategy)</div>
+        <div class="text-gradient-purple" style="font-size: 56px; font-weight: 800; margin-bottom: 20px;">Top 10%</div>
+        <div style="font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 30px;">신호 강도와 안정성의 황금비</div>
+        <div style="font-size: 24px; color: #eee; line-height: 1.6;">유의미한 저평가 신호를 유지하면서도, 통계적으로 충분한 포트폴리오 분산 효과를 확보할 수 있는 본 연구의 중심 전략입니다.</div>
+      </div>
+      
+      <!-- Top 20/30% -->
+      <div class="glass-panel" style="flex: 1; padding: 50px 40px; text-align: center; opacity: 0.6;">
+        <div style="font-size: 48px; font-weight: 800; color: #fff; margin-bottom: 20px;">Top 20~30%</div>
+        <div style="font-size: 24px; font-weight: 600; color: #00C6FF; margin-bottom: 30px;">높은 안정성, 신호 희석</div>
+        <div style="font-size: 22px; color: #aaa; line-height: 1.6;">종목 수가 많아 안정성은 높지만,<br>상대적 가치 괴리가 적은 기업이 섞여<br>핵심 알파 신호가 희석됩니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 37 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">RESULTS: BACKTEST</div>
+    <h2 style="margin-bottom: 10px;">단순 백테스트 성과 전체 비교 (Top 10%)</h2>
+    <p style="font-size: 32px; color: #aaa; margin-bottom: 20px;">전체 섹터 vs 무형자산 집약 섹터(바이오/IT) CAGR 비교 그래프</p>
+    <div class="glass-panel chart-container" style="width: 1500px; height: 500px; padding: 40px; border-color: rgba(167,112,239,0.3);">
+      <canvas id="cagrChart"></canvas>
+    </div>
+  </div>
+
+  <!-- 슬라이드 38 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill" style="background: rgba(255,69,58,0.1); color: #ff453a; border-color: rgba(255,69,58,0.3);">CRITICAL QUESTION</div>
+    <div class="cinematic-text" style="margin-top: 40px;">
+      이 압도적인 수익률이<br>
+      그저 시장 전체가 좋았거나 성장주 랠리에 편승한<br>
+      <span style="color: #ff453a; font-size: 72px; font-weight: 700; display: inline-block; margin: 30px 0;">'운(Luck)'은 아닐까요?</span><br>
+      <span style="font-size: 42px; color: #aaa; font-weight: 400;">"공통 위험요인(FF5)을 모두 통제하고도 <span class="text-gradient-blue" style="font-weight: 700;">진짜 알파(Alpha)</span>가 남는가?"</span>
+    </div>
+  </div>
+
+  <!-- 슬라이드 39 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">ALPHA TEST: ALL SECTORS</div>
+    <h2 style="margin-bottom: 40px;">Fama-French 5요인 검증 (전체 섹터)</h2>
+    
+    <div class="glass-panel" style="width: 1400px; padding: 50px; display: flex; flex-direction: column; align-items: center;">
+      <div style="font-size: 32px; color: #ccc; margin-bottom: 40px;">포트폴리오 초과수익(Alpha) 분해 과정</div>
+      
+      <div style="display: flex; align-items: flex-end; justify-content: center; gap: 60px; height: 280px; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 30px; width: 100%;">
+        <!-- 총 수익 -->
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+          <div style="font-size: 36px; font-weight: 700; color: #fff;">17.2%</div>
+          <div style="width: 120px; height: 220px; background: rgba(255,255,255,0.15); border-radius: 8px;"></div>
+          <div style="font-size: 24px; color: #aaa;">포트폴리오 성과</div>
+        </div>
+        <div style="font-size: 48px; color: rgba(255,255,255,0.2); margin-bottom: 60px;">➖</div>
+        <!-- 5요인 -->
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+          <div style="font-size: 36px; font-weight: 700; color: #ff453a;">14.2%</div>
+          <div style="width: 120px; height: 180px; background: rgba(255,69,58,0.3); border-radius: 8px;"></div>
+          <div style="font-size: 24px; color: #aaa; white-space: nowrap;">시장 / 규모 / 가치 요인 등</div>
+        </div>
+        <div style="font-size: 48px; color: rgba(255,255,255,0.2); margin-bottom: 60px;">🟰</div>
+        <!-- Alpha -->
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 15px;">
+          <div style="font-size: 36px; font-weight: 700; color: #ff3b30;">2.99%</div>
+          <div style="width: 120px; height: 40px; background: rgba(255,69,58,0.8); border-radius: 8px; box-shadow: 0 0 20px rgba(255,69,58,0.4);"></div>
+          <div style="font-size: 24px; font-weight: 600; color: #fff;">순수 Alpha</div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 40px; font-size: 32px; line-height: 1.6; color: #aaa; text-align: center;">
+        남은 2.99%의 알파는 우연일 확률이 높아 <span style="color: #ff453a; font-weight: 600;">통계적 유의성이 기각 (p=0.1775)</span> 되었습니다.<br>
+        <span style="font-size: 24px;">결론: 전체 시장에서는 무형자산 가치평가만으로 안정적인 알파를 낼 수 없습니다.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 40 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">ALPHA TEST: ALL vs BIO/IT</div>
+    <h2 style="margin-bottom: 10px;">Fama-French 5요인 통제 비교 (Top 10%)</h2>
+    <p style="font-size: 32px; color: #aaa; margin-bottom: 20px;">전체 시장에서는 기각되나, 바이오/IT에서는 강력한 위험조정 초과수익(Alpha) 생존</p>
+    <div class="glass-panel chart-container" style="width: 1500px; height: 500px; padding: 40px; border-color: rgba(0,198,255,0.3);">
+      <canvas id="alphaChart"></canvas>
+    </div>
+  </div>
+
+  <!-- 슬라이드 41 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">통계적 검증</div>
+    <h2 style="margin-bottom: 60px;">강건성 입증 (다중검정 보정)</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: center;">
+      <div style="font-size: 48px; font-weight: 600; line-height: 1.6; color: #fff; margin: 0; white-space: nowrap;">
+        수많은 테스트 중 '우연히 얻어걸린 결과'일 확률을 통제하는<br>
+        <span class="text-gradient-purple" style="font-size: 64px; font-weight: 700;">FDR 다중검정 보정(Benjamini-Hochberg)</span><br>
+        <span style="font-size: 36px; color: #ccc; margin-top: 30px; display: inline-block;">바이오/IT 상위 12개 핵심 전략 모두 5% FDR 임계치(p &le; 0.048)를 통과했습니다.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 42 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">EXECUTIVE SUMMARY</div>
+    <h2 style="margin-bottom: 60px;">결론 및 핵심 요약 (3-Pillars)</h2>
+    
+    <div style="display: flex; gap: 40px; width: 1500px; justify-content: center;">
+      <!-- Pillar 1 -->
+      <div class="glass-panel" style="flex: 1; padding: 50px 40px; text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <div style="width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-size: 48px; margin-bottom: 30px;">⚖️</div>
+        <div style="font-size: 32px; font-weight: 700; color: #fff; margin-bottom: 20px;">구조적 왜곡 증명</div>
+        <div style="font-size: 22px; color: #aaa; line-height: 1.6;">미국 회계기준(US GAAP)의 보수성이 무형자산 집약 섹터(바이오/IT)의 가치평가에 거대한 구조적 왜곡을 만듦을 확인했습니다.</div>
+      </div>
+      
+      <!-- Pillar 2 -->
+      <div class="glass-panel" style="flex: 1; padding: 50px 40px; text-align: center; display: flex; flex-direction: column; align-items: center;">
+        <div style="width: 100px; height: 100px; border-radius: 50%; background: rgba(167,112,239,0.1); border: 1px solid rgba(167,112,239,0.3); display: flex; align-items: center; justify-content: center; font-size: 48px; margin-bottom: 30px;">👀</div>
+        <div class="text-gradient-purple" style="font-size: 32px; font-weight: 700; margin-bottom: 20px;">시장의 비효율성</div>
+        <div style="font-size: 22px; color: #aaa; line-height: 1.6;">시장은 눈에 보이지 않는 R&D와 조직자본의 미래 가치를 완전히, 그리고 즉각적으로 가격에 반영하지 못하고 있습니다.</div>
+      </div>
+      
+      <!-- Pillar 3 -->
+      <div class="glass-panel" style="flex: 1; padding: 50px 40px; text-align: center; display: flex; flex-direction: column; align-items: center; border-color: rgba(0,198,255,0.3); background: rgba(0,198,255,0.05);">
+        <div style="width: 100px; height: 100px; border-radius: 50%; background: rgba(0,198,255,0.1); border: 1px solid rgba(0,198,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 48px; margin-bottom: 30px;">💡</div>
+        <div class="text-gradient-blue" style="font-size: 32px; font-weight: 700; margin-bottom: 20px;">도메인 지식의 승리</div>
+        <div style="font-size: 22px; color: #fff; line-height: 1.6;">단순 알고리즘의 복잡성(RankNet vs MSE)보다 <span style="color:#00C6FF; font-weight:700;">'회계적 통찰'이라는 도메인 지식</span>이 진짜 알파 창출의 핵심입니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 43 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill" style="background: rgba(255,255,255,0.1);">LIMITATIONS</div>
+    <h2 style="margin-bottom: 60px;">연구의 한계 및 향후 과제</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 60px 80px; text-align: left;">
+      <ul style="font-size: 36px; color: #fff; line-height: 2.2; margin: 0; padding-left: 40px; white-space: nowrap;">
+        <li><span style="color: #aaa;">Data:</span> 132개 상장폐지 티커의 가격 미확보로 인한 생존편향의 불완전한 통제 가능성</li>
+        <li><span style="color: #aaa;">Cost:</span> 실제 펀드 운용 시 발생하는 거래비용(Transaction Cost) 및 슬리피지 미반영</li>
+        <li><span style="color: #aaa;">Robustness:</span> RankNet 모델의 다중 시드(Seed) 및 하이퍼파라미터 추가 튜닝 필요</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 슬라이드 44 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">CONCLUSION</div>
+    <div class="cinematic-text" style="margin-top: 40px;">
+      재무제표 너머의 진짜 가치를 발견하다.<br>
+      <span style="font-size: 64px; font-weight: 700; display: inline-block; margin-top: 20px; color: #fff;">
+        무형자본 기반의 회계 보정 팩터는<br>
+        <span class="text-gradient-purple">바이오와 IT 혁신 산업</span>에서<br>
+        전통적 위험요인으로 설명되지 않는<br>
+        <span style="border-bottom: 4px solid #A770EF; padding-bottom: 5px;">강력한 초과수익(Alpha) 투자 신호</span>를 제공합니다.
+      </span>
+    </div>
+  </div>
+
+  <!-- 슬라이드 45 -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div style="font-size: 160px; font-weight: 800; letter-spacing: -4px; margin-bottom: 20px; text-align: center;" class="text-gradient-blue">Q&A</div>
+    <div style="font-size: 48px; color: #aaa; font-weight: 500; letter-spacing: 10px;">감사합니다</div>
+  </div>
+
+  <!-- 슬라이드 46 (Appendix) -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">APPENDIX 01</div>
+    <h2 style="margin-bottom: 40px;">References</h2>
+    <div class="glass-panel" style="width: 1400px; padding: 50px 80px; text-align: left;">
+      <div style="font-size: 24px; line-height: 1.8; color: #ccc; white-space: nowrap;">
+        • Fama & French (1993, 2015), <i>Common Risk Factors / A Five-Factor Asset Pricing Model</i><br>
+        • Peters & Taylor (2017), <i>Intangible Capital and the Investment-q Relation</i><br>
+        • Hulten & Hao (2008), <i>What Is a Company Really Worth? Intangible Capital and the Market-to-Book Value Puzzle</i><br>
+        • Burges et al. (2005), <i>Learning to Rank Using Gradient Descent</i><br>
+        • Poh et al. (2021), <i>Building Cross-Sectional Systematic Strategies by Learning to Rank</i><br>
+        • Aboody & Lev (1998), <i>The Value Relevance of Intangibles: The Case of Software Capitalization</i><br>
+        • Eisfeldt & Papanikolaou (2013), <i>Organization Capital and the Cross-Section of Expected Returns</i>
+      </div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 47 (Appendix) -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">APPENDIX 02</div>
+    <h2 style="margin-bottom: 20px;">Rank IC (순위 예측력 검증)</h2>
+    <p style="font-size: 32px; color: #aaa; margin-bottom: 40px;">실제 타겟 순위를 모델이 얼마나 잘 예측하는지 측정 (Spearman Rank Correlation)</p>
+    <div style="display: flex; gap: 40px; justify-content: center; width: 1400px;">
+      <div class="glass-panel" style="flex: 1; padding: 60px; text-align: center;">
+        <div style="font-size: 32px; color: #fff; white-space: nowrap;">전체 섹터 (RankNet)</div>
+        <div class="text-gradient-blue" style="font-size: 80px; font-weight: 700; margin-top: 20px;">0.510</div>
+        <div style="font-size: 24px; color: #888; margin-top: 10px; white-space: nowrap;">p &lt; 0.0001</div>
+      </div>
+      <div class="glass-panel" style="flex: 1; padding: 60px; text-align: center; border-color: rgba(167,112,239,0.3);">
+        <div style="font-size: 32px; color: #fff; white-space: nowrap;">바이오/IT (RankNet)</div>
+        <div class="text-gradient-purple" style="font-size: 80px; font-weight: 700; margin-top: 20px;">0.438</div>
+        <div style="font-size: 24px; color: #888; margin-top: 10px; white-space: nowrap;">p = 0.00003</div>
+      </div>
+    </div>
+    <p style="margin-top: 40px; font-size: 28px; color: #aaa;">순위 예측력 자체는 전체 섹터에서도 통계적으로 매우 유의하게 작동합니다.</p>
+  </div>
+
+  <!-- 슬라이드 48 (Appendix) -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">APPENDIX 03</div>
+    <h2 style="margin-bottom: 20px;">바이오 및 IT 세부 FF5 알파 (전체 전략)</h2>
+    <p style="font-size: 32px; color: #aaa; margin-bottom: 30px;">포트폴리오 비중에 따른 모든 전략(Top 5%~30%)의 위험조정수익률</p>
+    <div class="glass-panel" style="width: 1500px; padding: 30px 40px; border-color: rgba(255,255,255,0.2);">
+      <table style="width: 100%; border-collapse: collapse; font-size: 22px; color: #fff; text-align: center;">
+        <thead>
+          <tr style="background: rgba(255,255,255,0.1); color: #ccc;">
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">실험</th>
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">Top 5%</th>
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3); color: #A770EF;">Top 10%</th>
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">Top 20%</th>
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">Top 30%</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); border-right: 1px solid rgba(255,255,255,0.1); color: #ccc;">MSE (5년)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">21.67% (p=0.006)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(167,112,239,0.15); font-weight: bold;">20.20% (p=0.004)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">14.63% (p=0.006)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">10.24% (p=0.038)</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); border-right: 1px solid rgba(255,255,255,0.1); color: #ccc;">MSE (3년)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">18.84% (p=0.004)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(167,112,239,0.15); font-weight: bold;">26.20% (p=0.001)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">12.77% (p=0.008)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">9.25% (p=0.034)</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); border-right: 1px solid rgba(255,255,255,0.1); color: #ccc;">RankNet (5년)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">20.35% (p=0.006)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); background: rgba(0,198,255,0.15); font-weight: bold;">27.17% (p=0.003)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">12.50% (p=0.025)</td>
+            <td style="padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1);">10.21% (p=0.029)</td>
+          </tr>
+          <tr>
+            <td style="padding: 12px; border-bottom: none; border-right: 1px solid rgba(255,255,255,0.1); color: #ccc;">RankNet (3년)</td>
+            <td style="padding: 12px; border-bottom: none;">19.80% (p=0.013)</td>
+            <td style="padding: 12px; border-bottom: none; background: rgba(0,198,255,0.15); font-weight: bold;">23.33% (p=0.003)</td>
+            <td style="padding: 12px; border-bottom: none;">12.97% (p=0.010)</td>
+            <td style="padding: 12px; border-bottom: none;">10.16% (p=0.018)</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="font-size: 24px; color: #888; text-align: left; margin-top: 20px;">* 비율이 넓어질수록 수익률은 희석되나 모든 조건에서 양의 Alpha가 안정적으로 관측됨.</div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 49 (Appendix) -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">APPENDIX 04</div>
+    <h2 style="margin-bottom: 20px;">포트폴리오 비중별 수익률 추이 (Top 5% ~ 30%)</h2>
+    <p style="font-size: 32px; color: #aaa; margin-bottom: 40px;">타겟 종목 수를 늘릴수록(조건 완화) 수익률이 어떻게 변하는지 확인하는 선형 그래프</p>
+    <div class="glass-panel chart-container" style="width: 1500px; height: 600px; padding: 40px; border-color: rgba(167,112,239,0.3);">
+      <canvas id="quantileChart"></canvas>
+    </div>
+  </div>
+
+  <!-- 슬라이드 50 (Appendix) -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">APPENDIX 05</div>
+    <h2 style="margin-bottom: 20px;">바이오 및 IT 섹터 세부 성과표 (Top 5% ~ 30%)</h2>
+    <p style="font-size: 28px; color: #aaa; margin-bottom: 20px;">모든 실험 조건에 대한 백테스트 상세 결과 (CAGR, MDD, Sharpe)</p>
+    <div class="glass-panel" style="width: 1600px; padding: 30px; border-color: rgba(0,198,255,0.2);">
+      <table style="width: 100%; border-collapse: collapse; font-size: 18px; color: #fff; text-align: center;">
+        <thead>
+          <tr style="background: rgba(255,255,255,0.1); color: #ccc;">
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">모델</th>
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">윈도우</th>
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">전략</th>
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">연평균 수익률</th>
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">CAGR</th>
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">누적 수익률</th>
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">MDD</th>
+            <th style="padding: 10px; border-bottom: 2px solid rgba(255,255,255,0.3);">Sharpe</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td rowspan="4" style="border-bottom: 1px solid rgba(255,255,255,0.2);">MSE</td><td rowspan="4" style="border-bottom: 1px solid rgba(255,255,255,0.2);">5년</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 5%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">42.40%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">39.38%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">922.04%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-1.53%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">1.374</td></tr>
+          <tr style="background: rgba(167,112,239,0.15); font-weight: bold;"><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #A770EF;">Top 10%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">43.32%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">38.15%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">860.42%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-5.45%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">1.054</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 20%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">36.78%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">31.99%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">598.02%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-6.14%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.942</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">Top 30%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">29.78%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">26.07%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">406.02%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">-3.56%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">0.880</td></tr>
+          
+          <tr><td rowspan="4" style="border-bottom: 1px solid rgba(255,255,255,0.2);">MSE</td><td rowspan="4" style="border-bottom: 1px solid rgba(255,255,255,0.2);">3년</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 5%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">39.21%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">36.70%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">1,567.46%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-1.53%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">1.416</td></tr>
+          <tr style="background: rgba(167,112,239,0.15); font-weight: bold;"><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #A770EF;">Top 10%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">51.18%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">44.35%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">2,621.83%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-5.45%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">1.029</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 20%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">33.50%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">29.34%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">912.92%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-6.14%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.935</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">Top 30%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">27.61%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">24.19%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">602.66%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">-3.57%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">0.858</td></tr>
+
+          <tr><td rowspan="4" style="border-bottom: 1px solid rgba(255,255,255,0.2);">RankNet</td><td rowspan="4" style="border-bottom: 1px solid rgba(255,255,255,0.2);">5년</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 5%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">41.48%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">38.59%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">882.24%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-1.53%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">1.374</td></tr>
+          <tr style="background: rgba(0,198,255,0.15); font-weight: bold;"><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #00C6FF;">Top 10%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">51.81%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">44.51%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">1,216.01%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-5.45%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.975</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 20%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">33.63%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">29.17%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">500.09%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-8.10%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.898</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">Top 30%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">29.20%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">25.58%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">392.43%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">-6.24%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.2);">0.875</td></tr>
+
+          <tr><td rowspan="4" style="border-bottom: none;">RankNet</td><td rowspan="4" style="border-bottom: none;">3년</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 5%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">40.13%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">37.38%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">1,643.43%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-1.53%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">1.366</td></tr>
+          <tr style="background: rgba(0,198,255,0.15); font-weight: bold;"><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); color: #00C6FF;">Top 10%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">47.69%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">41.06%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">2,111.89%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-5.45%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.968</td></tr>
+          <tr><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 20%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">32.65%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">29.01%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">889.75%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">-4.06%</td><td style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.964</td></tr>
+          <tr><td style="padding: 8px; border-bottom: none;">Top 30%</td><td style="padding: 8px; border-bottom: none;">28.38%</td><td style="padding: 8px; border-bottom: none;">25.25%</td><td style="padding: 8px; border-bottom: none;">658.42%</td><td style="padding: 8px; border-bottom: none;">-3.72%</td><td style="padding: 8px; border-bottom: none;">0.918</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 슬라이드 51 (Appendix) -->
+  <div class="slide theme-dark">
+    <div class="premium-glow"></div>
+    <div class="label-pill">APPENDIX 06</div>
+    <h2 style="margin-bottom: 20px;">다중검정 보정 (Benjamini-Hochberg FDR) 상세표</h2>
+    <p style="font-size: 28px; color: #aaa; margin-bottom: 20px;">수많은 테스트 중 우연에 의한 결과(False Discovery) 확률을 5% 미만으로 통제한 결과</p>
+    <div class="glass-panel" style="width: 1500px; padding: 30px; border-color: rgba(167,112,239,0.3);">
+      <table style="width: 100%; border-collapse: collapse; font-size: 20px; color: #fff; text-align: center;">
+        <thead>
+          <tr style="background: rgba(255,255,255,0.1); color: #ccc;">
+            <th style="padding: 12px; border-bottom: 2px solid rgba(255,255,255,0.3);">순위</th>
+            <th style="padding: 12px; border-bottom: 2px solid rgba(255,255,255,0.3);">실험</th>
+            <th style="padding: 12px; border-bottom: 2px solid rgba(255,255,255,0.3);">전략 비중</th>
+            <th style="padding: 12px; border-bottom: 2px solid rgba(255,255,255,0.3);">연환산 HAC Alpha</th>
+            <th style="padding: 12px; border-bottom: 2px solid rgba(255,255,255,0.3);">Original p-value</th>
+            <th style="padding: 12px; border-bottom: 2px solid rgba(255,255,255,0.3); color: #A770EF;">BH-FDR 보정 p-value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">1</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">MSE / 바이오 및 IT / 3년</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 10%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">26.20%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.0013</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #fff;">0.0276</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">2</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">RankNet / 바이오 및 IT / 3년</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 10%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">23.33%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.0033</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #fff;">0.0276</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">3</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">RankNet / 바이오 및 IT / 5년</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 10%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">27.17%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.0033</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #fff;">0.0276</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">4</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">MSE / 바이오 및 IT / 3년</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 5%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">18.84%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.0040</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #fff;">0.0276</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">5</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">MSE / 바이오 및 IT / 5년</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 10%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">20.20%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.0045</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #fff;">0.0276</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">6</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">MSE / 바이오 및 IT / 5년</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 20%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">14.63%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.0061</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #fff;">0.0276</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">7</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">MSE / 바이오 및 IT / 5년</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 5%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">21.67%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.0065</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #fff;">0.0276</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">8</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">RankNet / 바이오 및 IT / 5년</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 5%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">20.35%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.0069</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #fff;">0.0276</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">9</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">MSE / 바이오 및 IT / 3년</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 20%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">12.77%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.0086</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #fff;">0.0305</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">10</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">RankNet / 바이오 및 IT / 3년</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 20%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">12.97%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.0108</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #fff;">0.0345</td></tr>
+          <tr><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">11</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">RankNet / 바이오 및 IT / 3년</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">Top 5%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">19.80%</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1);">0.0139</td><td style="padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: bold; color: #fff;">0.0403</td></tr>
+          <tr><td style="padding: 10px; border-bottom: none;">12</td><td style="padding: 10px; border-bottom: none;">RankNet / 바이오 및 IT / 3년</td><td style="padding: 10px; border-bottom: none;">Top 30%</td><td style="padding: 10px; border-bottom: none;">10.16%</td><td style="padding: 10px; border-bottom: none;">0.0182</td><td style="padding: 10px; border-bottom: none; font-weight: bold; color: #fff;">0.0484</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size: 20px; color: #aaa; margin-top: 15px; text-align: left;">* 상위 12개 핵심 전략 모두 5% FDR 임계치(p &le; 0.048)를 통과하여 유의성 입증</div>
+    </div>
+  </div>
+
+  <!-- 슬라이드 52 (Appendix) -->
+  <div class="slide theme-dark">
+    <div class="premium-glow premium-glow-purple"></div>
+    <div class="label-pill">APPENDIX 07</div>
+    <h2 style="margin-bottom: 20px;">Source Code & Repository</h2>
+    <p style="font-size: 28px; color: #aaa; margin-bottom: 60px;">본 캡스톤 프로젝트의 전체 소스코드와 백테스트 파이프라인은 아래 GitHub에서 확인하실 수 있습니다.</p>
+    
+    <div class="glass-panel" style="width: 1000px; padding: 60px; border-color: rgba(167,112,239,0.3); display: flex; flex-direction: column; align-items: center; gap: 40px;">
+      <div style="background: #fff; padding: 20px; border-radius: 20px; box-shadow: 0 0 40px rgba(255,255,255,0.2);">
+        <!-- QR Code Image using QuickChart API -->
+        <img src="https://quickchart.io/qr?text=https://github.com/CODEhenryKIL/Capstone-Team-Quant&size=400&margin=1" alt="GitHub QR Code" style="width: 300px; height: 300px; display: block; border-radius: 10px;">
+      </div>
+      
+      <div style="text-align: center;">
+        <div style="font-size: 40px; font-weight: 800; color: #fff; margin-bottom: 20px;">GitHub Repository</div>
+        <a href="https://github.com/CODEhenryKIL/Capstone-Team-Quant" target="_blank" style="font-size: 32px; color: #00C6FF; text-decoration: underline; word-break: break-all; font-family: 'SF Mono', Consolas, monospace;">
+          github.com/CODEhenryKIL/Capstone-Team-Quant
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Indicators (Placed inside the 16:9 container so they scale) -->
+  <div class="page-indicator" id="page-indicator">1 / 52</div>
+
+</div>
+
+<script>
+  // 1. Fixed Aspect Ratio Scaling Logic
+  const container = document.getElementById('presentation-container');
+  const targetWidth = 1920;
+  const targetHeight = 1080;
+
+  function resizeContainer() {
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    
+    // Calculate scale to fit window completely while maintaining aspect ratio
+    const scaleX = windowWidth / targetWidth;
+    const scaleY = windowHeight / targetHeight;
+    const scale = Math.min(scaleX, scaleY);
+    
+    // Apply scale and center
+    container.style.transform = `translate(-50%, -50%) scale(${scale})`;
+  }
+
+  window.addEventListener('resize', resizeContainer);
+  resizeContainer(); // Initial call
+
+  // Chart instances
+  let cagrChartInstance = null;
+  let alphaChartInstance = null;
+  let quantileChartInstance = null;
+
+  // Chart default setup
+  Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif';
+  Chart.defaults.color = '#ffffff';
+
+  function renderCagrChart() {
+    const canvas = document.getElementById('cagrChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (cagrChartInstance) cagrChartInstance.destroy();
+    
+    cagrChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['MSE (5년)', 'MSE (3년)', 'RankNet (5년)', 'RankNet (3년)'],
+        datasets: [
+          {
+            label: '전체 섹터 CAGR (%)',
+            data: [17.27, 15.21, 14.78, 17.17],
+            backgroundColor: 'rgba(255, 255, 255, 0.2)',
+            borderRadius: 8
+          },
+          {
+            label: '바이오/IT 섹터 CAGR (%)',
+            data: [38.15, 44.35, 44.51, 41.06],
+            backgroundColor: '#A770EF',
+            borderRadius: 8
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { 
+            display: true, 
+            labels: { font: { size: 24, family: '"Inter", sans-serif' }, color: '#ccc' } 
+          },
+          tooltip: {
+            titleFont: { size: 28 },
+            bodyFont: { size: 28 },
+            padding: 20,
+            callbacks: { label: (context) => ` ${context.dataset.label}: ${context.raw}%` }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 50,
+            grid: { color: 'rgba(255,255,255,0.1)' },
+            ticks: {
+              font: { size: 24, color: '#fff' },
+              callback: function(value) { return value + "%"; }
+            },
+            border: { display: false }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 28, weight: 600, color: '#fff' } },
+            border: { display: false }
+          }
+        },
+        animation: { duration: 1500, easing: 'easeOutQuart' }
+      }
+    });
+  }
+
+  function renderAlphaChart() {
+    const canvas = document.getElementById('alphaChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (alphaChartInstance) alphaChartInstance.destroy();
+    
+    alphaChartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['MSE (5년)', 'MSE (3년)', 'RankNet (5년)', 'RankNet (3년)'],
+        datasets: [
+          {
+            label: '전체 섹터 Alpha (%)',
+            data: [2.25, 1.20, -0.22, 2.99],
+            backgroundColor: 'rgba(255, 69, 58, 0.6)',
+            borderRadius: 8
+          },
+          {
+            label: '바이오/IT 섹터 Alpha (%)',
+            data: [20.20, 26.20, 27.17, 23.33],
+            backgroundColor: '#00C6FF',
+            borderRadius: 8
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { 
+            display: true, 
+            labels: { font: { size: 24, family: '"Inter", sans-serif' }, color: '#ccc' } 
+          },
+          tooltip: {
+            titleFont: { size: 28 },
+            bodyFont: { size: 28 },
+            padding: 20,
+            callbacks: { label: (context) => ` ${context.dataset.label}: ${context.raw}%` }
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 35,
+            grid: { color: 'rgba(255,255,255,0.1)' },
+            ticks: {
+              font: { size: 24, color: '#fff' },
+              callback: function(value) { return value + "%"; }
+            },
+            border: { display: false }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 28, weight: 600, color: '#fff' } },
+            border: { display: false }
+          }
+        },
+        animation: { duration: 1500, easing: 'easeOutQuart' }
+      }
+    });
+  }
+
+  function renderQuantileChart() {
+    const canvas = document.getElementById('quantileChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (quantileChartInstance) quantileChartInstance.destroy();
+    
+    quantileChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Top 5%', 'Top 10%', 'Top 20%', 'Top 30%'],
+        datasets: [
+          {
+            label: 'MSE (5년) CAGR',
+            data: [39.38, 38.15, 31.99, 26.07],
+            borderColor: 'rgba(255, 69, 58, 0.8)',
+            backgroundColor: 'rgba(255, 69, 58, 0.2)',
+            pointBackgroundColor: 'rgba(255, 69, 58, 1)',
+            borderWidth: 4,
+            pointRadius: 6,
+            tension: 0.3
+          },
+          {
+            label: 'MSE (3년) CAGR',
+            data: [36.70, 44.35, 29.34, 24.19],
+            borderColor: 'rgba(255, 159, 10, 0.8)',
+            backgroundColor: 'rgba(255, 159, 10, 0.2)',
+            pointBackgroundColor: 'rgba(255, 159, 10, 1)',
+            borderWidth: 4,
+            pointRadius: 6,
+            tension: 0.3
+          },
+          {
+            label: 'RankNet (5년) CAGR',
+            data: [38.59, 44.51, 29.17, 25.58],
+            borderColor: '#00C6FF',
+            backgroundColor: 'rgba(0, 198, 255, 0.2)',
+            pointBackgroundColor: '#00C6FF',
+            borderWidth: 4,
+            pointRadius: 6,
+            tension: 0.3
+          },
+          {
+            label: 'RankNet (3년) CAGR',
+            data: [37.38, 41.06, 29.01, 25.25],
+            borderColor: '#A770EF',
+            backgroundColor: 'rgba(167, 112, 239, 0.2)',
+            pointBackgroundColor: '#A770EF',
+            borderWidth: 4,
+            pointRadius: 6,
+            tension: 0.3
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { 
+            display: true, 
+            labels: { font: { size: 24, family: '"Inter", sans-serif' }, color: '#ccc' } 
+          },
+          tooltip: {
+            titleFont: { size: 28 },
+            bodyFont: { size: 28 },
+            padding: 20,
+            callbacks: { label: (context) => ` ${context.dataset.label}: ${context.raw}%` }
+          }
+        },
+        scales: {
+          y: {
+            min: 15,
+            max: 55,
+            grid: { color: 'rgba(255,255,255,0.1)' },
+            ticks: {
+              font: { size: 24, color: '#fff' },
+              callback: function(value) { return value + "%"; }
+            },
+            border: { display: false }
+          },
+          x: {
+            grid: { color: 'rgba(255,255,255,0.1)' },
+            ticks: { font: { size: 28, weight: 600, color: '#fff' } },
+            border: { display: false }
+          }
+        },
+        animation: { duration: 2000, easing: 'easeOutQuart' }
+      }
+    });
+  }
+
+  // 2. Slide Navigation Logic
+  const slides = document.querySelectorAll('.slide');
+  const indicator = document.getElementById('page-indicator');
+  let currentSlide = 0;
+
+  // URL Hash Routing to preserve page on refresh
+  const initHash = window.location.hash.replace('#slide', '');
+  const parsedHash = parseInt(initHash) - 1;
+  if (!isNaN(parsedHash) && parsedHash >= 0 && parsedHash < slides.length) {
+    currentSlide = parsedHash;
+  }
+
+  window.addEventListener('hashchange', () => {
+    const hash = window.location.hash.replace('#slide', '');
+    const slideIdx = parseInt(hash) - 1;
+    if (!isNaN(slideIdx) && slideIdx >= 0 && slideIdx < slides.length && slideIdx !== currentSlide) {
+      currentSlide = slideIdx;
+      updateSlides(false);
+    }
+  });
+
+  function updateSlides(updateHash = true) {
+    if (updateHash) {
+      window.location.hash = `slide${currentSlide + 1}`;
+    }
+    
+    slides.forEach((slide, index) => {
+      if (index === currentSlide) {
+        slide.classList.add('active');
+        indicator.innerText = `${index + 1} / ${slides.length}`;
+      } else {
+        slide.classList.remove('active');
+      }
+    });
+    
+    // 차트 렌더링
+    if (currentSlide === 11 && !document.getElementById('valueChart').hasAttribute('data-rendered')) {
+      setTimeout(renderValueChart, 100);
+    }
+    if (currentSlide === 36 && !document.getElementById('cagrChart').hasAttribute('data-rendered')) {
+      setTimeout(renderCagrChart, 100);
+    }
+    if (currentSlide === 39 && !document.getElementById('alphaChart').hasAttribute('data-rendered')) {
+      setTimeout(renderAlphaChart, 100);
+    }
+    if (currentSlide === 48 && !document.getElementById('quantileChart').hasAttribute('data-rendered')) {
+      setTimeout(renderQuantileChart, 100);
+    }
+    
+    // MSE Animation
+    if (currentSlide === 32) { // Slide 33 (0-indexed 32)
+      setTimeout(startMSEAnimation, 100);
+    }
+  }
+
+  // Keyboard navigation & Shortcuts
+  window.addEventListener('keydown', (e) => {
+    // Command + F or Ctrl + F to toggle fullscreen
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'f') {
+      e.preventDefault();
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+      return;
+    }
+
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        updateSlides();
+      }
+    } else if (e.key === 'ArrowLeft') {
+      if (currentSlide > 0) {
+        currentSlide--;
+        updateSlides();
+      }
+    }
+  });
+
+  // Slide 33: Interactive MSE 
+  let mseInitialized = false;
+  let mseOutlierActive = false;
+  
+  function startMSEAnimation() {
+    const canvas = document.getElementById('mseCanvas');
+    const slider = document.getElementById('slopeSlider');
+    const display = document.getElementById('mseValueDisplay');
+    const outlierBtn = document.getElementById('mseOutlierBtn');
+    if (!canvas || !slider || !display) return;
+    
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width;
+    const h = canvas.height;
+    
+    const basePoints = [
+      { x: 50, y: 150 },
+      { x: 120, y: 90 },
+      { x: 200, y: 180 },
+      { x: 280, y: 110 },
+      { x: 380, y: 60 }
+    ];
+    
+    const outlierPoint = { x: 420, y: 200 }; // Extreme outlier far from regression
+    
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      
+      const m = parseFloat(slider.value);
+      const b = 180; // Intercept fixed for simplicity
+      
+      let points = [...basePoints];
+      if (mseOutlierActive) {
+        points.push(outlierPoint);
+      }
+      
+      let totalSquaredError = 0;
+      
+      // Draw residuals (Error)
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 5]);
+      points.forEach(p => {
+        const lineY = m * p.x + b;
+        const error = p.y - lineY;
+        totalSquaredError += (error * error);
+        
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x, lineY);
+        
+        const dist = Math.abs(error);
+        if (dist < 15) {
+           ctx.strokeStyle = '#34c759'; 
+        } else {
+           ctx.strokeStyle = '#ff453a'; 
+        }
+        ctx.stroke();
+      });
+      
+      const mse = totalSquaredError / points.length;
+      display.innerHTML = `MSE 손실값: <span style="color:${mse < (mseOutlierActive ? 5000 : 2000) ? '#34c759' : '#ff453a'}">${mse.toFixed(0)}</span>`;
+      
+      // Draw regression line
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(0, b);
+      ctx.lineTo(w, m * w + b);
+      ctx.strokeStyle = '#00C6FF';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+      
+      // Draw points
+      points.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p === outlierPoint ? 8 : 6, 0, Math.PI * 2);
+        ctx.fillStyle = p === outlierPoint ? '#ff453a' : '#fff';
+        ctx.fill();
+        ctx.strokeStyle = p === outlierPoint ? '#fff' : '#a770ef';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+    }
+    
+    if (!mseInitialized) {
+      slider.addEventListener('input', draw);
+      if (outlierBtn) {
+        outlierBtn.addEventListener('click', () => {
+          mseOutlierActive = !mseOutlierActive;
+          if (mseOutlierActive) {
+            outlierBtn.textContent = '극단값 OFF 🟢';
+            outlierBtn.style.background = 'rgba(255,69,58,0.3)';
+          } else {
+            outlierBtn.textContent = '극단값 ON 🔴';
+            outlierBtn.style.background = 'rgba(255,255,255,0.1)';
+          }
+          draw();
+        });
+      }
+      mseInitialized = true;
+    }
+    
+    draw();
+  }
+
+  // Slide 34: RankNet Outlier Toggle
+  const ranknetOutlierBtn = document.getElementById('ranknetOutlierBtn');
+  const ranknetOutlier = document.getElementById('ranknetOutlier');
+  const ranknetTextNormal = document.getElementById('ranknetTextNormal');
+  const ranknetTextOutlier = document.getElementById('ranknetTextOutlier');
+  let ranknetOutlierActive = false;
+  
+  if (ranknetOutlierBtn) {
+    ranknetOutlierBtn.addEventListener('click', () => {
+      ranknetOutlierActive = !ranknetOutlierActive;
+      if (ranknetOutlierActive) {
+        ranknetOutlierBtn.textContent = '극단값 OFF 🟢';
+        ranknetOutlierBtn.style.background = 'rgba(255,69,58,0.3)';
+        ranknetOutlier.style.opacity = '1';
+        ranknetTextNormal.style.display = 'none';
+        ranknetTextOutlier.style.display = 'block';
+      } else {
+        ranknetOutlierBtn.textContent = '극단값 ON 🔴';
+        ranknetOutlierBtn.style.background = 'rgba(255,255,255,0.1)';
+        ranknetOutlier.style.opacity = '0';
+        ranknetTextNormal.style.display = 'block';
+        ranknetTextOutlier.style.display = 'none';
+      }
+    });
+  }
+
+  // Initialize
+  updateSlides();
+</script>
+</body>
+</html>

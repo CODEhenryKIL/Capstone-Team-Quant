@@ -1,0 +1,14 @@
+metric,value
+historical_universe_tickers,770
+sp500_membership_rows,7548
+monthly_price_months,185
+monthly_price_tickers,638
+price_failure_tickers,132
+manual_filled_numeric_price_rows,0
+fundamental_rows,39123
+fundamental_tickers,768
+fundamental_failure_tickers,2
+feature_rows_model_ready,4146
+feature_tickers_model_ready,473
+feature_year_min,2013
+feature_year_max,2025

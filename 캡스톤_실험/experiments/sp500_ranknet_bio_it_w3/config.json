@@ -1,0 +1,32 @@
+{
+  "window": 3,
+  "alpha": 1.0,
+  "start_year": 2016,
+  "model_type": "ranknet",
+  "sector_scope": "bio_it",
+  "bio_it_sectors": [
+    "Information Technology"
+  ],
+  "bio_it_industries": [
+    "Biotechnology"
+  ],
+  "target_mode": "sector",
+  "long_ratios": [
+    0.05,
+    0.1,
+    0.2,
+    0.3
+  ],
+  "delisting_policy": "sp500_exit_uses_market_price_missing_sell_price_minus_100pct",
+  "buy_price_max_staleness_days": 45,
+  "ranknet_learning_rate": 0.05,
+  "ranknet_epochs": 150,
+  "ranknet_l2": 0.01,
+  "ranknet_max_pairs_per_year": 5000,
+  "ranknet_seed": 42,
+  "evaluation_tracks": [
+    "raw_annual_backtest",
+    "fama_french_5_factor_alpha"
+  ],
+  "ff5_factor_file": "data/raw/fama_french_5_factors_monthly.csv"
+}

@@ -1,0 +1,9 @@
+name,exp_dir,model_type,sector_scope,window,n_predictions,n_return_rows,created_at
+sp500_mse_all_w5,/Users/henrykil/Library/Mobile Documents/com~apple~CloudDocs/1. 대학수업/4학년 1학기/캡스톤 디자인(벤경)/캡스톤 프로젝트/캡스톤_실험/experiments/sp500_mse_all_w5,mse,all,5,2816,28,2026-06-02T18:58:10
+sp500_mse_all_w3,/Users/henrykil/Library/Mobile Documents/com~apple~CloudDocs/1. 대학수업/4학년 1학기/캡스톤 디자인(벤경)/캡스톤 프로젝트/캡스톤_실험/experiments/sp500_mse_all_w3,mse,all,3,3393,36,2026-06-02T18:58:10
+sp500_mse_bio_it_w5,/Users/henrykil/Library/Mobile Documents/com~apple~CloudDocs/1. 대학수업/4학년 1학기/캡스톤 디자인(벤경)/캡스톤 프로젝트/캡스톤_실험/experiments/sp500_mse_bio_it_w5,mse,bio_it,5,497,28,2026-06-02T18:58:10
+sp500_mse_bio_it_w3,/Users/henrykil/Library/Mobile Documents/com~apple~CloudDocs/1. 대학수업/4학년 1학기/캡스톤 디자인(벤경)/캡스톤 프로젝트/캡스톤_실험/experiments/sp500_mse_bio_it_w3,mse,bio_it,3,583,36,2026-06-02T18:58:10
+sp500_ranknet_all_w5,/Users/henrykil/Library/Mobile Documents/com~apple~CloudDocs/1. 대학수업/4학년 1학기/캡스톤 디자인(벤경)/캡스톤 프로젝트/캡스톤_실험/experiments/sp500_ranknet_all_w5,ranknet,all,5,2816,28,2026-06-02T18:58:10
+sp500_ranknet_all_w3,/Users/henrykil/Library/Mobile Documents/com~apple~CloudDocs/1. 대학수업/4학년 1학기/캡스톤 디자인(벤경)/캡스톤 프로젝트/캡스톤_실험/experiments/sp500_ranknet_all_w3,ranknet,all,3,3393,36,2026-06-02T18:58:10
+sp500_ranknet_bio_it_w5,/Users/henrykil/Library/Mobile Documents/com~apple~CloudDocs/1. 대학수업/4학년 1학기/캡스톤 디자인(벤경)/캡스톤 프로젝트/캡스톤_실험/experiments/sp500_ranknet_bio_it_w5,ranknet,bio_it,5,497,28,2026-06-02T18:58:10
+sp500_ranknet_bio_it_w3,/Users/henrykil/Library/Mobile Documents/com~apple~CloudDocs/1. 대학수업/4학년 1학기/캡스톤 디자인(벤경)/캡스톤 프로젝트/캡스톤_실험/experiments/sp500_ranknet_bio_it_w3,ranknet,bio_it,3,583,36,2026-06-02T18:58:10

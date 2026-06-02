@@ -1,0 +1,3 @@
+ticker,cik,reason
+FRC,0001132979,HTTPError: 404 Client Error: Not Found for url: https://data.sec.gov/api/xbrl/companyfacts/CIK0001132979.json
+SBNY,0001288784,HTTPError: 404 Client Error: Not Found for url: https://data.sec.gov/api/xbrl/companyfacts/CIK0001288784.json

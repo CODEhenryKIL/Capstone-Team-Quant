@@ -1,0 +1,3 @@
+﻿ticker,expected_company_name,mapped_cik_now,sec_cache_entity_name_now,first_year,last_year,sp500_years,failure_reason,correct_cik_to_fill,price_ticker_to_fill,sec_ticker_to_fill,notes
+POM,Pepco Holdings,0001877971,POMDOCTOR LIMITED,2011,2015,"2011,2012,2013,2014,2015",no parsed facts,,POM,POM,Likely historical ticker reuse or wrong SEC mapping.
+SE,Spectra Energy,0001703399,Sea Limited,2011,2016,"2011,2012,2013,2014,2015,2016",no parsed facts,,SE,SE,Likely historical ticker reuse or wrong SEC mapping.

@@ -1,0 +1,7 @@
+﻿ticker,start_year,end_year,price_ticker,sec_ticker,cik,sector,industry,name,notes,source_url
+AGN,2011,2014,AGN,AGN,0000850693,,,Allergan,Original Allergan Inc. before Actavis/Allergan plc transaction.,https://www.sec.gov/edgar/browse/?CIK=0000850693&owner=exclude
+AGN,2015,2019,AGN,AGN,0001578845,,,Allergan,CIK filled in main table because it covers the later AGN issuer period.,https://www.sec.gov/edgar/browse/?CIK=0001578845&owner=exclude
+ESRX,2011,2011,ESRX,ESRX,0000885721,,,Express Scripts,Pre-holding-company issuer.,https://www.sec.gov/edgar/browse/?CIK=0000885721&owner=exclude
+ESRX,2012,2017,ESRX,ESRX,0001532063,,,Express Scripts,CIK filled in main table because it covers the post-2012 issuer period.,https://www.sec.gov/edgar/browse/?CIK=0001532063&owner=exclude
+WBA,2011,2014,WBA,WBA,0000104207,,,Walgreens Boots Alliance,Pre-Walgreens Boots Alliance issuer.,https://www.sec.gov/edgar/browse/?CIK=0000104207&owner=exclude
+WBA,2015,2024,WBA,WBA,0001618921,,,Walgreens Boots Alliance,CIK filled in main table because it covers the WBA issuer period.,https://www.sec.gov/edgar/browse/?CIK=0001618921&owner=exclude

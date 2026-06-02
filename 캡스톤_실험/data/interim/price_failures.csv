@@ -1,0 +1,133 @@
+ticker,price_ticker,reason
+ACE,ACE,empty dataframe
+ANR,ANR,empty dataframe
+APOL,APOL,empty dataframe
+AGN,AGN,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/AGN?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+ARG,ARG,empty dataframe
+ABMD,ABMD,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/ABMD?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+ADS,ADS,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/ADS?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+BCR,BCR,empty dataframe
+ALTR,ALTR,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/ALTR?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+ALXN,ALXN,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/ALXN?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+BHI,BHI,empty dataframe
+ANSS,ANSS,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/ANSS?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+BRCM,BRCM,empty dataframe
+BXLT,BXLT,empty dataframe
+CFN,CFN,empty dataframe
+ATVI,ATVI,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/ATVI?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+AVP,AVP,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/AVP?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+ARNC,ARNC,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/ARNC?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+BIG,BIG,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/BIG?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+COV,COV,empty dataframe
+CPGX,CPGX,empty dataframe
+CSC,CSC,empty dataframe
+CVC,CVC,empty dataframe
+CELG,CELG,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/CELG?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+CVH,CVH,empty dataframe
+CERN,CERN,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/CERN?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+CHK,CHK,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/CHK?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+CMA,CMA,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/CMA?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+CTLT,CTLT,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/CTLT?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+CTXS,CTXS,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/CTXS?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+CXO,CXO,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/CXO?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DAY,DAY,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DAY?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DF,DF,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DF?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DFS,DFS,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DFS?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DISCA,DISCA,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DISCA?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DPS,DPS,empty dataframe
+DISCK,DISCK,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DISCK?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DISH,DISH,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DISH?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DNB,DNB,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DNB?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DNR,DNR,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DNR?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DO,DO,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DO?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DRE,DRE,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DRE?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DTV,DTV,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DTV?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+DWDP,DWDP,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/DWDP?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+FDO,FDO,empty dataframe
+ENDP,ENDP,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/ENDP?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+ESV,ESV,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/ESV?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+ETFC,ETFC,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/ETFC?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+FBHS,FBHS,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/FBHS?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+FL,FL,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/FL?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+FII,FII,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/FII?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+FLIR,FLIR,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/FLIR?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+FRC,FRC,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/FRC?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+GAS,GAS,empty dataframe
+GGP,GGP,empty dataframe
+GMCR,GMCR,empty dataframe
+FRX,FRX,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/FRX?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+HCBK,HCBK,empty dataframe
+HNZ,HNZ,empty dataframe
+FTR,FTR,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/FTR?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+HSP,HSP,empty dataframe
+GPS,GPS,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/GPS?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+HBI,HBI,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/HBI?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+HFC,HFC,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/HFC?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+HES,HES,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/HES?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+JOY,JOY,empty dataframe
+JDSU,JDSU,empty dataframe
+KFT,KFT,empty dataframe
+IGT,IGT,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/IGT?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+KRFT,KRFT,empty dataframe
+IPG,IPG,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/IPG?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+LLTC,LLTC,empty dataframe
+JNPR,JNPR,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/JNPR?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+LO,LO,empty dataframe
+JCP,JCP,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/JCP?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+JWN,JWN,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/JWN?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+K,K,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/K?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+LVLT,LVLT,empty dataframe
+LXK,LXK,empty dataframe
+MJN,MJN,empty dataframe
+KSU,KSU,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/KSU?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+LLL,LLL,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/LLL?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+LM,LM,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/LM?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+LSI,LSI,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/LSI?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+NVLS,NVLS,empty dataframe
+MON,MON,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/MON?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+MNK,MNK,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/MNK?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+NYX,NYX,empty dataframe
+MRO,MRO,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/MRO?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+MXIM,MXIM,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/MXIM?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+PCP,PCP,empty dataframe
+NBL,NBL,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/NBL?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+PETM,PETM,empty dataframe
+PGN,PGN,empty dataframe
+NLSN,NLSN,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/NLSN?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+RAI,RAI,empty dataframe
+PBCT,PBCT,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/PBCT?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+PDCO,PDCO,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/PDCO?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+PLL,PLL,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/PLL?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+PXD,PXD,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/PXD?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+QEP,QEP,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/QEP?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+RDC,RDC,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/RDC?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+RHT,RHT,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/RHT?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+RRD,RRD,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/RRD?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+SIAL,SIAL,empty dataframe
+SNI,SNI,empty dataframe
+STJ,STJ,empty dataframe
+RTN,RTN,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/RTN?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+SWY,SWY,empty dataframe
+SAI,SAI,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/SAI?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+TWC,TWC,empty dataframe
+SIVB,SIVB,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/SIVB?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+TYC,TYC,empty dataframe
+SRCL,SRCL,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/SRCL?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+SWN,SWN,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/SWN?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+TGNA,TGNA,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/TGNA?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+TSS,TSS,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/TSS?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+TIF,TIF,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/TIF?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+WFM,WFM,empty dataframe
+TWTR,TWTR,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/TWTR?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+WYN,WYN,empty dataframe
+VAR,VAR,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/VAR?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+VIAB,VIAB,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/VIAB?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+WBA,WBA,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/WBA?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+WCG,WCG,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/WCG?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+WIN,WIN,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/WIN?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+WPX,WPX,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/WPX?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+X,X,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/X?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+XEC,XEC,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/XEC?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+XLNX,XLNX,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/XLNX?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+XL,XL,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/XL?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
+YHOO,YHOO,HTTPError: 404 Client Error: Not Found for url: https://query1.finance.yahoo.com/v8/finance/chart/YHOO?period1=1293840000&period2=1780099200&interval=1d&events=history&includeAdjustedClose=true
